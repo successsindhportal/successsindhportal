@@ -852,6 +852,84 @@
 
   @media (max-width: 900px) { .hp-htext { width: auto !important; position: static !important; top: auto !important; left: auto !important; } .hp-htitle { font-size: min(23px, 5.9vw); } }
   @media (max-width: 900px) { .hp-welcome { font-size: 17px !important; } .hp-htext .hp-script { font-size: 26px !important; } .hp-htext .hp-admin { font-size: 12px !important; } .hp-lead { font-size: 13px !important; max-width: none !important; } }
+
+  /* ===== Hamrid exercises ===== */
+  #pgHamrid.pg-in-r, #pgHamrid.pg-in-l, #pgHamrid.pg-in-up { animation: hmPage .8s cubic-bezier(.2,.8,.2,1) both; transform-origin: left center; }
+  @keyframes hmPage { from { opacity: 0; transform: perspective(1000px) rotateY(-42deg) translateZ(-90px) scale(.9); } to { opacity: 1; transform: none; } }
+  .hm-anim { animation: hmFlip .6s cubic-bezier(.2,.8,.2,1) both; transform-origin: left center; }
+  .hm-anim2 { animation: hmSlide .35s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes hmFlip { from { opacity: 0; transform: perspective(900px) rotateY(-24deg) translateX(26px) scale(.95); } to { opacity: 1; transform: none; } }
+  @keyframes hmSlide { from { opacity: 0; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+  .hm-clip { --bg: #cfe2ff; width: 76px; height: 76px; flex: none; border-radius: 24px; display: grid; place-items: center; font-size: 42px; background: radial-gradient(circle at 28% 22%, #fff 0, var(--bg) 50%, color-mix(in srgb, var(--bg) 62%, #1d4fa8) 100%); box-shadow: inset -7px -9px 16px rgba(10,50,140,.3), inset 6px 6px 12px rgba(255,255,255,.95), 0 16px 24px rgba(10,60,160,.3); transform: perspective(520px) rotateY(-16deg) rotateX(8deg); animation: hmFloat 3.6s ease-in-out infinite; }
+  .hm-clip em { font-style: normal; filter: drop-shadow(0 6px 4px rgba(0,0,0,.28)); line-height: 1; }
+  .hm-clip.big { width: 96px; height: 96px; font-size: 54px; border-radius: 30px; }
+  @keyframes hmFloat { 0%, 100% { transform: perspective(520px) rotateY(-16deg) rotateX(8deg) translateY(0); } 50% { transform: perspective(520px) rotateY(10deg) rotateX(4deg) translateY(-8px); } }
+  .hm-hero { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+  .hm-hero h3 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 1.7rem; color: #0b2a63; }
+  .hm-hero p { margin: 2px 0 0; color: var(--muted); }
+  .hm-hero.small .hm-clip { width: 76px; height: 76px; font-size: 42px; }
+  .hm-banner { border-radius: 14px; padding: 12px 14px; font-weight: 700; margin-bottom: 12px; line-height: 1.45; }
+  .hm-banner.go { background: #e4f6ec; color: #17804a; border: 1.5px solid #bfe3cd; }
+  .hm-banner.ok { background: #e8f0ff; color: #1d4fa8; border: 1.5px solid #c5d8fb; }
+  .hm-banner.warn { background: #fff4d6; color: #8a5a00; border: 1.5px solid #ecd9a0; }
+  .hm-banner.bad { background: #fde8e8; color: #c0312b; border: 1.5px solid #f2c0bd; }
+  .hm-stat { color: var(--muted); font-size: .86rem; margin: 0 2px 14px; }
+  .hm-stat b { color: #0b2a63; }
+  .hm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 700px) { .hm-grid { grid-template-columns: repeat(3, 1fr); } }
+  .hm-topic { font: inherit; background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--c); border-radius: 20px; padding: 16px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s; -webkit-tap-highlight-color: transparent; }
+  .hm-topic:hover { transform: perspective(700px) rotateX(5deg) translateY(-4px); box-shadow: 0 18px 32px rgba(10,60,160,.2); }
+  .hm-topic:active { transform: scale(.96); }
+  .hm-topic b { font-size: 1.05rem; color: #0b2a63; }
+  .hm-topic small { color: var(--muted); font-weight: 600; }
+  .hm-topic.soon { opacity: .6; cursor: default; border-top-color: #cbd5e6; }
+  .hm-topic.soon:hover { transform: none; box-shadow: var(--shadow); }
+  .hm-pb { width: 80%; height: 6px; border-radius: 6px; background: #e3ebf8; overflow: hidden; }
+  .hm-pb i { display: block; height: 100%; background: linear-gradient(90deg, #16a34a, #4ade80); border-radius: 6px; }
+  .hm-back { font: inherit; background: none; border: 0; color: #1d5fd8; font-weight: 800; padding: 6px 2px; margin-bottom: 8px; cursor: pointer; }
+  .hm-ex { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); transition: transform .2s; }
+  .hm-ex:active { transform: scale(.98); }
+  .hm-exn { width: 46px; height: 46px; flex: none; border-radius: 14px; display: grid; place-items: center; font-weight: 800; color: #fff; background: linear-gradient(#1a6ee6, #0c4fb8); box-shadow: 0 6px 12px rgba(12,79,184,.3); }
+  .hm-exname { flex: 1; font-weight: 700; color: #0b2a63; }
+  .hm-exst { font-size: .8rem; font-weight: 800; color: #1d5fd8; white-space: nowrap; }
+  .hm-ex.passed { border-color: #bfe3cd; background: #f3fbf6; } .hm-ex.passed .hm-exn { background: linear-gradient(#22c55e, #15803d); } .hm-ex.passed .hm-exst { color: #17804a; }
+  .hm-ex.locked { opacity: .55; cursor: default; box-shadow: none; } .hm-ex.locked .hm-exn { background: #98a6c1; box-shadow: none; } .hm-ex.locked .hm-exst { color: #5b6b86; }
+  .hm-card { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 22px 18px; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .hm-card.center { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .hm-card h3 { margin: 6px 0 0; font-family: "Fraunces", Georgia, serif; color: #0b2a63; font-size: 1.5rem; }
+  .hm-sub { margin: 0; color: var(--muted); font-weight: 600; }
+  .hm-rules { text-align: left; margin: 6px 0; padding-left: 20px; color: #2c4670; line-height: 1.7; }
+  .hm-card .hm-banner, .hm-card .btn { width: 100%; }
+  .hm-qtop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .hm-exit { font: inherit; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 7px 12px; font-weight: 700; color: #5b6b86; cursor: pointer; }
+  .hm-qn { font-weight: 800; color: #0b2a63; }
+  .hm-bar { height: 8px; border-radius: 8px; background: #dfe8f8; overflow: hidden; margin-bottom: 14px; }
+  .hm-bar i { display: block; height: 100%; background: linear-gradient(90deg, #1d6fe8, #7db2ff); border-radius: 8px; transition: width .4s; }
+  .hm-qcard { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .hm-qt { font-size: 1.18rem; font-weight: 800; color: #0b2a63; line-height: 1.4; }
+  .hm-sent { background: #eef4ff; border: 1.5px dashed #9bbcf0; border-radius: 14px; padding: 10px 14px; font-size: 1.12rem; font-weight: 700; color: #0b2a63; }
+  .hm-opts { display: grid; gap: 10px; margin-bottom: 14px; }
+  .hm-opt { font: inherit; display: flex; align-items: center; gap: 12px; text-align: left; min-height: 58px; background: #fff; border: 2px solid #d3deef; border-radius: 16px; padding: 10px 14px; cursor: pointer; transition: transform .15s, border-color .2s, background .2s, box-shadow .2s; -webkit-tap-highlight-color: transparent; }
+  .hm-opt b { width: 34px; height: 34px; flex: none; border-radius: 50%; display: grid; place-items: center; background: #eaf1fc; color: #1d4fa8; }
+  .hm-opt span { font-size: 1.05rem; font-weight: 700; color: #13233f; }
+  .hm-opt:active { transform: scale(.98); }
+  .hm-opt.on { border-color: #1d6fe8; background: #eaf2ff; box-shadow: 0 8px 18px rgba(29,111,232,.25); transform: translateY(-2px); }
+  .hm-opt.on b { background: #1d6fe8; color: #fff; }
+  .hm-next:disabled { opacity: .45; }
+  .hm-ring { --p: 0; width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(#16a34a calc(var(--p) * 1%), #dc2626 0); display: grid; place-items: center; box-shadow: 0 12px 26px rgba(10,60,160,.25); }
+  .hm-ring > div { width: 112px; height: 112px; border-radius: 50%; background: #fff; display: grid; place-content: center; }
+  .hm-ring b { font-size: 2.3rem; color: #0b2a63; line-height: 1; } .hm-ring small { color: var(--muted); font-weight: 700; }
+  .hm-pills { display: flex; gap: 10px; margin-top: 6px; }
+  .hm-pill { padding: 8px 16px; border-radius: 99px; font-weight: 800; }
+  .hm-pill.g { background: #dcf5e6; color: #15803d; } .hm-pill.r { background: #fde0e0; color: #c0312b; }
+  .okc { color: #15803d !important; } .badc { color: #c0312b !important; }
+  .hm-note { margin: 0; color: #2c4670; font-weight: 600; }
+  .hm-save { font-size: .86rem; color: var(--muted); font-weight: 700; min-height: 1.4em; } .hm-save.ok { color: #17804a; } .hm-save.bad { color: #c0312b; }
+  .hm-rh { margin: 18px 2px 8px; color: #0b2a63; }
+  .hm-rev { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; margin-bottom: 8px; }
+  .hm-revq { font-weight: 700; color: #0b2a63; } .hm-revr { color: #c0312b; font-weight: 600; margin-top: 3px; } .hm-revg { color: #15803d; font-weight: 700; }
+  body.hm-quiz .wa-fab { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { .hm-clip { animation: none; } }
 </style>
 </head>
 <body>
@@ -1255,6 +1333,8 @@
       <div id="dtList"></div>
       <button type="button" class="btn ghost block" id="dtMore" hidden>Load more</button>
     </div>
+    <!-- Page: Hamrid (English grammar exercises) -->
+    <div id="pgHamrid" hidden><div id="hmBody"></div></div>
   </section>
 
   <div id="boot" class="state"><div class="spinner"></div>Loading...</div>
@@ -1311,6 +1391,7 @@
       <button style="--k:1" type="button" class="tb" data-page="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg><span>My Profile</span></button>
       <button style="--k:2" type="button" class="tb" data-page="apps"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 14l2 2 4-4"/></svg><span>Applications</span></button>
       <button style="--k:3" type="button" class="tb" data-page="slip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2.5"/></svg><span>Slip</span></button>
+      <button style="--k:4" type="button" class="tb" id="tbHamrid" data-page="hamrid"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg><span>Hamrid</span></button>
       <button style="--k:4" type="button" class="tb" id="tbVerify" data-page="verify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3"/><path d="M16 4h3a1 1 0 0 1 1 1v3"/><path d="M20 16v3a1 1 0 0 1-1 1h-3"/><path d="M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M9 12l2 2 4-4"/></svg><span>VerifyMe</span></button>
       <div class="dr-group" id="dataGroup" hidden>
         <button style="--k:5" type="button" class="tb grp" id="tbData" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg><span>Portal Data</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -1874,8 +1955,8 @@
   }
 
   /* ---------- pages (menu) ---------- */
-  const PAGES = ["dash", "profile", "apps", "slip", "verify", "data"];
-  const PGID = { dash: "pgDash", profile: "pgProfile", apps: "pgApps", slip: "pgSlip", verify: "pgVerify", data: "pgData" };
+  const PAGES = ["dash", "profile", "apps", "slip", "verify", "data", "hamrid"];
+  const PGID = { dash: "pgDash", profile: "pgProfile", apps: "pgApps", slip: "pgSlip", verify: "pgVerify", data: "pgData", hamrid: "pgHamrid" };
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let curPage = null, pgToken = 0;
   function goPage(name, noScroll) {
@@ -1893,6 +1974,8 @@
       if (name === "apps") loadApps();
       if (name === "slip") loadSlips();
       if (name === "data") dataInit();
+      document.body.classList.remove("hm-quiz");
+      if (name === "hamrid") hmInit();
       if (name !== "verify") stopScan(); else applyVerifyAccess();
     };
     if (from && from !== name && !reduceMotion) {
@@ -3390,6 +3473,321 @@ async function buildSlip(app, ov) {
       setTab("login"); hint("Please login to see " + (t.dataset.tile === "sch" ? "Scholarships" : t.dataset.tile === "oly" ? "Olympiads" : "your applications") + "."); focusCard();
     }));
   })();
+
+
+  /* ---------- Hamrid: exercise engine (questions are generated fresh every time) ---------- */
+  const HM_R = (n) => Math.floor(Math.random() * n);
+  const hmPick = (a) => a[HM_R(a.length)];
+  const hmShuf = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = HM_R(i + 1); const t = b[i]; b[i] = b[j]; b[j] = t; } return b; };
+  const hmSample = (a, n) => hmShuf(a).slice(0, n);
+  const hmCap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  function hmQ(text, correct, wrongs, extra) {
+    const w = []; (wrongs || []).forEach((x) => { if (x !== correct && !w.includes(x)) w.push(x); });
+    if (w.length < 3) return null;
+    const opts = hmShuf([correct].concat(w.slice(0, 3)));
+    return Object.assign({ q: text, opts, a: opts.indexOf(correct) }, extra || {});
+  }
+  const HM_CLIPS = ["\uD83C\uDF4E", "\uD83D\uDCDA", "\u270F\uFE0F", "\uD83C\uDF92", "\uD83C\uDF1F", "\uD83D\uDE80", "\uD83C\uDF88", "\u26BD", "\uD83E\uDD8B", "\uD83C\uDFC6", "\uD83C\uDFA8", "\uD83D\uDCA1", "\uD83D\uDC31", "\uD83C\uDF08", "\uD83D\uDD14", "\uD83E\uDDE9", "\uD83C\uDFAF", "\uD83C\uDF3B", "\uD83D\uDC22", "\uD83C\uDF49"];
+  function hmBuild(gen) {
+    const out = [], seen = new Set(); let tries = 0;
+    while (out.length < 20 && tries < 900) {
+      tries++;
+      let q = null; try { q = gen(); } catch (e) { q = null; }
+      if (!q) continue;
+      const key = q.q + "|" + (q.sent || "") + "|" + q.opts[q.a];
+      if (seen.has(key) && tries < 500) continue;
+      seen.add(key); q.clip = hmPick(HM_CLIPS); out.push(q);
+    }
+    return out;
+  }
+  /* --- word lists (only unambiguous words) --- */
+  const LV = "AEIOU".split(""), LC = "BCDFGHJKLMNPQRSTVWXZ".split(""), LA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const WORDS = "APPLE TABLE ELEPHANT PENCIL GARDEN BASKET WINDOW SCHOOL MARKET FLOWER ORANGE BANANA CAMEL TIGER HOUSE CHAIR BOOK LION FISH MOON STAR RIVER MOUNTAIN TEACHER STUDENT COMPUTER UMBRELLA BOTTLE CANDLE DOCTOR FARMER HORSE MANGO PLANET ROCKET SUGAR TOMATO ISLAND HOSPITAL".split(" ");
+  const isV = (c) => LV.includes(c);
+  const WC = {
+    noun: "pencil teacher river mountain farmer window chair camel lion tiger rabbit hospital airport umbrella bridge kitchen bicycle pillow elephant library".split(" "),
+    verb: "eat sing write read climb throw listen speak arrive enjoy teach bring build choose".split(" "),
+    adj: "tall happy clever small kind brave smart tired young strong beautiful heavy honest polite tasty colourful famous shiny".split(" "),
+    adv: "quickly slowly loudly happily carefully quietly badly softly bravely politely often always never".split(" "),
+    pron: "I you he she it we they me him them us".split(" "),
+    prep: "in on under behind beside across between through towards".split(" "),
+    conj: "and but or because although unless".split(" "),
+    interj: ["Wow!", "Hurray!", "Oh!", "Alas!", "Ouch!", "Oops!", "Bravo!", "Hey!"]
+  };
+  const HM_LBL = { noun: "a noun", pron: "a pronoun", verb: "a verb", adv: "an adverb", adj: "an adjective", prep: "a preposition", conj: "a conjunction", interj: "an interjection" };
+  const hmWordQ = (cat, extra) => { const c = hmPick(WC[cat].concat(extra || [])), others = Object.keys(WC).filter((k) => k !== cat).reduce((a, k) => a.concat(WC[k]), []); return hmQ("Which of these words is " + HM_LBL[cat] + "?", c, hmSample(others, 3)); };
+  /* --- sentences with known parts of speech --- */
+  const SN = "boy girl teacher farmer doctor bird dog cat horse driver student baby".split(" ");
+  const SA = "tall happy clever small kind brave smart tired young strong".split(" ");
+  const SV3 = "runs walks sings jumps sleeps laughs works plays smiles waits".split(" ");
+  const SAD = "quickly slowly loudly happily carefully quietly badly softly bravely politely".split(" ");
+  const SPRED = [["sit", "sits", "on", "chair"], ["sleep", "sleeps", "under", "tree"], ["play", "plays", "in", "garden"], ["wait", "waits", "near", "school"], ["stand", "stands", "beside", "door"], ["walk", "walks", "across", "bridge"], ["hide", "hides", "behind", "wall"], ["swim", "swims", "in", "river"], ["sing", "sings", "on", "stage"], ["jump", "jumps", "over", "fence"]];
+  const SDP = [["found", "a", "shiny", "coin"], ["caught", "a", "big", "fish"], ["saw", "a", "colourful", "kite"], ["won", "a", "golden", "cup"], ["bought", "a", "new", "bag"], ["made", "a", "tasty", "cake"]];
+  const SNAMES = ["Ali", "Sara", "Ahmed", "Zara", "Bilal", "Hina"], SMALE = ["Ali", "Ahmed", "Bilal"];
+  const SGAMES = ["cricket", "football", "hockey", "chess", "ludo"], SDRINK = ["tea", "milk", "juice", "water"], SFEEL = ["happy", "proud", "glad", "excited"];
+  function hmSentence(o) {
+    const t = HM_R(o && o.noInt ? 5 : 6);
+    if (t === 0) { const a = hmPick(SA), n = hmPick(SN), v = hmPick(SV3), d = hmPick(SAD); return { text: "The " + a + " " + n + " " + v + " " + d + ".", toks: [{ w: "The", p: "det" }, { w: a, p: "adj" }, { w: n, p: "noun" }, { w: v, p: "verb" }, { w: d, p: "adv" }] }; }
+    if (t === 1) { const pr = hmPick([["He", 1], ["She", 1], ["They", 0], ["We", 0], ["I", 0]]), pd = hmPick(SPRED), vb = pd[pr[1] ? 1 : 0]; return { text: pr[0] + " " + vb + " " + pd[2] + " the " + pd[3] + ".", toks: [{ w: pr[0], p: "pron" }, { w: vb, p: "verb" }, { w: pd[2], p: "prep" }, { w: "the", p: "det" }, { w: pd[3], p: "noun" }] }; }
+    if (t === 2) { const xy = hmSample(SNAMES, 2), g = hmPick(SGAMES); return { text: xy[0] + " and " + xy[1] + " play " + g + ".", toks: [{ w: xy[0], p: "noun" }, { w: "and", p: "conj" }, { w: xy[1], p: "noun" }, { w: "play", p: "verb" }, { w: g, p: "noun" }] }; }
+    if (t === 3) { const xy = hmSample(SNAMES, 2), dd = hmSample(SDRINK, 2); return { text: xy[0] + " likes " + dd[0] + " but " + xy[1] + " likes " + dd[1] + ".", toks: [{ w: xy[0], p: "noun" }, { w: "likes", p: "verb" }, { w: dd[0], p: "noun" }, { w: "but", p: "conj" }, { w: xy[1], p: "noun" }, { w: "likes", p: "verb" }, { w: dd[1], p: "noun" }] }; }
+    if (t === 4) { const x = hmPick(SNAMES), f = hmPick(SFEEL), pn = SMALE.includes(x) ? "he" : "she"; return { text: x + " is " + f + " because " + pn + " won.", toks: [{ w: x, p: "noun" }, { w: "is", p: "verb" }, { w: f, p: "adj" }, { w: "because", p: "conj" }, { w: pn, p: "pron" }, { w: "won", p: "verb" }] }; }
+    const i = hmPick(["Wow", "Hurray", "Oh"]), pr = hmPick(["He", "She", "They", "We", "I"]), d = hmPick(SDP);
+    return { text: i + "! " + pr + " " + d[0] + " " + d[1] + " " + d[2] + " " + d[3] + ".", toks: [{ w: i, p: "interj" }, { w: pr, p: "pron" }, { w: d[0], p: "verb" }, { w: d[1], p: "det" }, { w: d[2], p: "adj" }, { w: d[3], p: "noun" }] };
+  }
+  function hmPosQ(pos) {
+    for (let i = 0; i < 90; i++) {
+      const s = hmSentence(), tg = s.toks.filter((x) => x.p === pos);
+      if (!tg.length) continue;
+      const tl = new Set(tg.map((x) => x.w.toLowerCase())), seen = new Set(), oth = [];
+      s.toks.forEach((x) => { const k = x.w.toLowerCase(); if (x.p !== pos && !tl.has(k) && !seen.has(k)) { seen.add(k); oth.push(x.w); } });
+      if (oth.length < 3) continue;
+      const q = hmQ("Which word in this sentence is " + HM_LBL[pos] + "?", hmPick(tg).w, hmSample(oth, 3), { sent: s.text });
+      if (q) return q;
+    }
+    return null;
+  }
+  const hmRow = (rows) => () => { const r = hmPick(rows); return hmQ(r[0], r[1], r[2]); };
+  const hmTable = (str) => str.split("|").map((x) => { const p = x.split(":"); return [p[0], p[1], p[2].split(",")]; });
+  /* --- exercise registry --- */
+  const HM_TOPICS = [
+    { id: 1, name: "Letter", clip: "\uD83D\uDD24", c: "#1d6fe8" }, { id: 2, name: "Word", clip: "\uD83D\uDCD6", c: "#8b5cf6" }, { id: 3, name: "Sentence", clip: "\uD83D\uDCAC", c: "#16a34a" },
+    { id: 4, name: "Phrase", clip: "\uD83E\uDDE9", c: "#f97316" }, { id: 5, name: "Noun", clip: "\uD83C\uDF4E", c: "#e11d48" }, { id: 6, name: "Pronoun", clip: "\uD83D\uDE4B", c: "#0891b2" },
+    { id: 7, name: "Verb", clip: "\uD83C\uDFC3", c: "#7c3aed" }, { id: 8, name: "Adverb", clip: "\uD83D\uDE80", c: "#ea580c" }, { id: 9, name: "Adjective", clip: "\uD83C\uDF1F", c: "#ca8a04" },
+    { id: 10, name: "Preposition", clip: "\uD83D\uDCE6", c: "#0d9488" }, { id: 11, name: "Conjunction", clip: "\uD83D\uDD17", c: "#db2777" }, { id: 12, name: "Interjection", clip: "\uD83D\uDE2E", c: "#2563eb" }
+  ];
+  const HM_EX = {};
+  function hmReg(topic, ord, name, gen) { const id = topic + "." + ord; HM_EX[id] = { id, topic, ord, name, gen }; }
+  /* Topic 1: Letter */
+  hmReg(1, 1, "Vowels", () => { const t = HM_R(3);
+    if (t === 0) { const low = HM_R(2) === 0, f = (x) => (low ? x.toLowerCase() : x); return hmQ("Which of these letters is a vowel?", f(hmPick(LV)), hmSample(LC, 3).map(f)); }
+    if (t === 1) { const w = hmPick(WORDS), n = [...w].filter(isV).length; return hmQ("How many vowels are in the word " + w + "?", String(n), [n + 1, n + 2, n - 1, n + 3].map(String)); }
+    return hmQ("Which word begins with a vowel?", hmPick(WORDS.filter((w) => isV(w[0]))), hmSample(WORDS.filter((w) => !isV(w[0])), 3)); });
+  hmReg(1, 2, "Consonants", () => { const t = HM_R(3);
+    if (t === 0) { const low = HM_R(2) === 0, f = (x) => (low ? x.toLowerCase() : x); return hmQ("Which of these letters is a consonant?", f(hmPick(LC)), hmSample(LV, 3).map(f)); }
+    if (t === 1) { const w = hmPick(WORDS), n = [...w].filter((c) => !isV(c)).length; return hmQ("How many consonants are in the word " + w + "?", String(n), [n + 1, n + 2, n - 1, n + 3].map(String)); }
+    return hmQ("Which word begins with a consonant?", hmPick(WORDS.filter((w) => !isV(w[0]))), hmSample(WORDS.filter((w) => isV(w[0])), 3)); });
+  hmReg(1, 3, "Capital and Small Letters", () => { const t = HM_R(4), c = hmPick(LA);
+    if (t === 0) return hmQ("Which is the capital letter of '" + c.toLowerCase() + "'?", c, hmSample(LA.filter((x) => x !== c), 3));
+    if (t === 1) return hmQ("Which is the small letter of '" + c + "'?", c.toLowerCase(), hmSample(LA.filter((x) => x !== c), 3).map((x) => x.toLowerCase()));
+    if (t === 2) return hmQ("Which of these is a capital letter?", c, hmSample(LA.filter((x) => x !== c), 3).map((x) => x.toLowerCase()));
+    const n = hmPick(["Ali", "Sara", "Ahmed", "Zara", "Bilal", "Hina", "Omar", "Noor"]), l = n.toLowerCase();
+    return hmQ("Which name is written correctly?", n, [l, l[0] + l[1].toUpperCase() + l.slice(2), l.slice(0, -1) + l.slice(-1).toUpperCase()]); });
+  hmReg(1, 4, "Alphabet Order", () => { const t = HM_R(5);
+    if (t === 0) { const k = HM_R(25), c = LA[k], a = LA[k + 1]; return hmQ("Which letter comes after " + c + "?", a, hmSample(LA.filter((x) => x !== a && x !== c), 3)); }
+    if (t === 1) { const k = 1 + HM_R(25), c = LA[k], b = LA[k - 1]; return hmQ("Which letter comes before " + c + "?", b, hmSample(LA.filter((x) => x !== b && x !== c), 3)); }
+    if (t === 2) { const k = 1 + HM_R(24), m = LA[k], l = LA[k - 1], r = LA[k + 1]; return hmQ("Which letter comes between " + l + " and " + r + "?", m, hmSample(LA.filter((x) => x !== m && x !== l && x !== r), 3)); }
+    if (t === 3) { const s = hmSample(LA, 4).sort(), first = HM_R(2) === 0, ans = first ? s[0] : s[3]; return hmQ("Which of these letters comes " + (first ? "first" : "last") + " in the alphabet?", ans, s.filter((x) => x !== ans)); }
+    return hmQ("How many letters are there in the English alphabet?", "26", ["24", "25", "27", "28"]); });
+  /* Topic 2: Word */
+  hmReg(2, 1, "Counting Letters", () => { const t = HM_R(3);
+    if (t < 2) { const w = hmPick(WORDS), n = w.length; return hmQ("How many letters are in the word " + w + "?", String(n), [n - 1, n + 1, n + 2, n - 2].map(String)); }
+    const out = [], used = new Set(); hmShuf(WORDS).forEach((w) => { if (!used.has(w.length) && out.length < 4) { used.add(w.length); out.push(w); } });
+    const longest = HM_R(2) === 0, ans = out.slice().sort((a, b) => (longest ? b.length - a.length : a.length - b.length))[0];
+    return hmQ("Which is the " + (longest ? "longest" : "shortest") + " word?", ans, out.filter((x) => x !== ans)); });
+  hmReg(2, 2, "First and Last Letters", () => { const t = HM_R(4), w = hmPick(WORDS);
+    if (t === 0) return hmQ("What is the first letter of the word " + w + "?", w[0], hmSample(LA.filter((x) => x !== w[0]), 3));
+    if (t === 1) return hmQ("What is the last letter of the word " + w + "?", w[w.length - 1], hmSample(LA.filter((x) => x !== w[w.length - 1]), 3));
+    if (t === 2) return hmQ("Which word begins with the letter " + w[0] + "?", w, hmSample(WORDS.filter((x) => x[0] !== w[0]), 3));
+    const L = w[w.length - 1]; return hmQ("Which word ends with the letter " + L + "?", w, hmSample(WORDS.filter((x) => x[x.length - 1] !== L), 3)); });
+  const SPELL = hmTable("beautiful::beutiful,beautifull,butiful|friend::freind,frend,friendd|school::scool,schol,schoool|because::becouse,becuase,becose|teacher::techer,teachar,teachr|mountain::mountin,montain,mountian|library::libary,librery,liberary|elephant::elefant,elephent,eliphant|tomorrow::tomorow,tommorow,tomorrov|different::diffrent,diferent,differant|family::famly,familly,fameley|garden::gardan,gardn,gardin|doctor::docter,doktor,dockter|orange::orenge,oranje,orang|animal::animel,anamal,animall|chocolate::choclate,chocolat,chokolate|yellow::yelow,yellaw,yello|umbrella::umbrela,umbrellla,umberella|question::quesion,questoin,qestion|answer::anser,answar,answere|people::peaple,poeple,peopel|country::contry,countri,cuntry|colour::colur,coler,collor|Wednesday::wensday,wednsday,wedensday|believe::belive,beleive,beleave");
+  hmReg(2, 3, "Correct Spelling", () => { const r = hmPick(SPELL);
+    if (HM_R(3) === 0) { const others = hmSample(SPELL.filter((x) => x[0] !== r[0]), 3).map((x) => x[0]); return hmQ("Which word is spelt WRONGLY?", hmPick(r[2]), others); }
+    return hmQ("Which spelling is correct?", r[0], r[2]); });
+  /* Topic 3: Sentence */
+  const frag = () => { const t = HM_R(3);
+    if (t === 0) return "The " + hmPick(SA) + " " + hmPick(SN);
+    if (t === 1) return hmCap(hmPick(SV3)) + " " + hmPick(SAD);
+    const p = hmPick(SPRED); return hmCap(p[2]) + " the " + p[3]; };
+  const sent0 = () => hmSentence({ noInt: true }).text.replace(/\.$/, "");
+  hmReg(3, 1, "Sentence or Not?", () => {
+    if (HM_R(2) === 0) return hmQ("Which of these is a complete sentence?", sent0(), [frag(), frag(), frag(), frag()]);
+    return hmQ("Which of these is NOT a complete sentence?", frag(), [sent0(), sent0(), sent0(), sent0()]); });
+  const KS = {
+    Statement: ["The sun rises in the east.", "Birds can fly.", "My father works in a bank.", "We live in Sindh.", "The cat is sleeping.", "Ali plays cricket every day.", "It is a sunny day.", "Sara reads a book.", "The shop opens at nine.", "Rice grows in Sindh."],
+    Question: ["Where do you live?", "What is your name?", "Is this your pen?", "How old are you?", "Who is your teacher?", "Do you like mangoes?", "Why are you late?", "Can you swim?", "When does school start?", "Which book is yours?"],
+    Command: ["Open your book.", "Close the door.", "Sit down, please.", "Come here.", "Write your name.", "Please be quiet.", "Wash your hands.", "Listen to the teacher.", "Turn off the light.", "Pick up your bag."],
+    Exclamation: ["What a beautiful day!", "How tall he is!", "Hurray! We won the match!", "What a lovely garden!", "How brave you are!", "Wow! That is amazing!", "What a big fish!", "How sweet this mango is!", "Oh, what a surprise!", "What a clever girl!"]
+  };
+  hmReg(3, 2, "Kinds of Sentences", () => { const k = hmPick(Object.keys(KS)), s = hmPick(KS[k]);
+    return hmQ("What kind of sentence is this?", k, Object.keys(KS).filter((x) => x !== k), { sent: s }); });
+  const QS = ["Where is my bag", "What is your name", "How are you", "Who is at the door", "Are you ready", "Do you like tea", "When does the bus come", "Why is he crying"];
+  hmReg(3, 3, "Capital Letter and Full Stop", () => {
+    if (HM_R(2) === 0) { const s = hmSentence({ noInt: true }).text, body = s.slice(0, -1).split(" "), last = body.length - 1;
+      const mid = body.slice(); mid[last] = hmCap(mid[last]);
+      return hmQ("Which sentence is written correctly?", s, [s.charAt(0).toLowerCase() + s.slice(1), s.slice(0, -1), mid.join(" ") + "."]); }
+    const q = hmPick(QS); return hmQ("Which sentence is written correctly?", q + "?", [q.charAt(0).toLowerCase() + q.slice(1) + "?", q + ".", q]); });
+  /* Topic 4: Phrase */
+  const PHR = ["in the garden", "on the table", "under the tree", "a pair of shoes", "a cup of tea", "very quickly", "after the match", "near the river", "with a big smile", "at the bus stop", "a bunch of keys", "before the exam", "behind the door", "across the bridge", "during the holidays", "a glass of water", "in the morning", "at night", "by the sea", "for a long time"];
+  hmReg(4, 1, "Phrase or Sentence?", () => {
+    if (HM_R(2) === 0) return hmQ("Which one is a phrase (it is NOT a complete sentence)?", hmCap(hmPick(PHR)), [sent0(), sent0(), sent0(), sent0()]);
+    return hmQ("Which one is a complete sentence?", sent0(), hmSample(PHR, 4).map(hmCap)); });
+  const PH = [["a pair of ___", "shoes", ["milk", "bread", "rice"]], ["a glass of ___", "water", ["shoes", "bread", "books"]], ["a cup of ___", "tea", ["shoes", "chairs", "chalk"]], ["a loaf of ___", "bread", ["water", "tea", "chalk"]], ["a bar of ___", "soap", ["water", "milk", "rice"]], ["a piece of ___", "cake", ["water", "milk", "tea"]], ["a bunch of ___", "keys", ["milk", "soap", "rain"]], ["a herd of ___", "cows", ["fish", "birds", "wolves"]], ["a flock of ___", "birds", ["fish", "cows", "wolves"]], ["a school of ___", "fish", ["birds", "cows", "bees"]], ["a swarm of ___", "bees", ["cows", "fish", "birds"]], ["a pack of ___", "wolves", ["bees", "fish", "cows"]], ["a bouquet of ___", "flowers", ["shoes", "keys", "books"]], ["a team of ___", "players", ["bees", "cows", "birds"]], ["a class of ___", "students", ["fish", "bees", "cows"]], ["a bag of ___", "rice", ["rain", "light", "news"]], ["a bottle of ___", "juice", ["bread", "shoes", "chalk"]], ["a plate of ___", "rice", ["water", "tea", "soap"]], ["a bowl of ___", "soup", ["shoes", "chalk", "soap"]], ["a drop of ___", "water", ["shoes", "chairs", "books"]], ["a sheet of ___", "paper", ["milk", "tea", "rice"]], ["a piece of ___", "chalk", ["water", "milk", "tea"]]];
+  hmReg(4, 2, "Complete the Phrase", () => { const r = hmPick(PH); return hmQ("Choose the correct word to complete the phrase: " + r[0], r[1], r[2]); });
+  /* Topic 5: Noun */
+  const NC = { person: "teacher doctor farmer pilot nurse driver tailor judge".split(" "), place: "school market hospital garden mosque airport library park".split(" "), animal: "lion horse camel rabbit tiger goat elephant sheep".split(" "), thing: "table pencil bottle chair clock window umbrella book".split(" ") };
+  hmReg(5, 1, "Find the Noun", () => {
+    if (HM_R(2) === 0) return hmWordQ("noun");
+    const k = hmPick(Object.keys(NC)), oth = Object.keys(NC).filter((x) => x !== k).reduce((a, x) => a.concat(NC[x]), []);
+    return hmQ("Which word is the name of " + (k === "animal" || k === "arrow" ? "an " : "a ") + k + "?", hmPick(NC[k]), hmSample(oth, 3)); });
+  hmReg(5, 2, "Noun in Sentences", () => hmPosQ("noun"));
+  const PRO = "Karachi Pakistan Sindh Lahore Hyderabad Sukkur Indus Ramazan Ali Sara Ahmed Zara Quetta Peshawar Islamabad Ghotki Multan".split(" "), COM = "city country river boy girl teacher mountain school month market doctor village".split(" ");
+  hmReg(5, 3, "Common and Proper Nouns", () => { const t = HM_R(3);
+    if (t === 0) return hmQ("Which of these is a proper noun?", hmPick(PRO), hmSample(COM, 3));
+    if (t === 1) return hmQ("Which of these is a common noun?", hmPick(COM), hmSample(PRO, 3));
+    const pro = HM_R(2) === 0, w = pro ? hmPick(PRO) : hmPick(COM);
+    return hmQ("Is '" + w + "' a common noun or a proper noun?", pro ? "Proper noun" : "Common noun", [pro ? "Common noun" : "Proper noun", "Verb", "Adjective"]); });
+  const PL = hmTable("book:books:bookes,bokks,bookss|box:boxes:boxs,boxies,boxen|child:children:childs,childes,childrens|man:men:mans,manes,mens|tooth:teeth:tooths,toothes,teeths|mouse:mice:mouses,mices,mousies|city:cities:citys,cityes,citis|baby:babies:babys,babyes,babis|leaf:leaves:leafs,leafes,leavs|knife:knives:knifes,knifees,knivs|foot:feet:foots,feets,footes|bus:buses:buss,busies,busez|dish:dishes:dishs,dishies,dishees|wolf:wolves:wolfs,wolfes,wolvs|woman:women:womans,womens,womanes|day:days:daies,dayes,dayss|story:stories:storys,storyes,storis|watch:watches:watchs,watchies,watchez|class:classes:classs,classies,classez|fox:foxes:foxs,foxies,foxen|goose:geese:gooses,geeses,goosen|toy:toys:toies,toyes,toyss|girl:girls:girles,girlz,girlss");
+  hmReg(5, 4, "Singular and Plural", () => { const r = hmPick(PL);
+    if (HM_R(2) === 0) return hmQ("What is the plural of '" + r[0] + "'?", r[1], r[2]);
+    return hmQ("What is the singular of '" + r[1] + "'?", r[0], hmSample(PL.filter((x) => x[0] !== r[0]), 3).map((x) => x[0])); });
+  /* Topic 6: Pronoun */
+  hmReg(6, 1, "Find the Pronoun", () => hmWordQ("pron", "myself yourself himself herself itself ourselves themselves mine yours ours theirs".split(" ")));
+  hmReg(6, 2, "Pronoun in Sentences", () => hmPosQ("pron"));
+  hmReg(6, 3, "Replace the Noun", hmRow([["Ali is my friend. ___ is very kind.", "He", ["She", "It", "They"]], ["Sara is a doctor. ___ works in a hospital.", "She", ["He", "It", "They"]], ["The book is on the table. ___ is red.", "It", ["He", "She", "They"]], ["Ali and Sara are cousins. ___ live in Sukkur.", "They", ["He", "She", "It"]], ["My mother and I went to the market. ___ bought fruit.", "We", ["He", "They", "She"]], ["The children are playing. ___ are happy.", "They", ["He", "She", "It"]], ["My brother is tall. ___ plays cricket.", "He", ["She", "It", "They"]], ["My sister is in class five. ___ is a good student.", "She", ["He", "It", "They"]], ["The cat is hungry. Please give ___ some milk.", "it", ["he", "they", "we"]], ["Ahmed is calling. Please talk to ___.", "him", ["he", "she", "they"]], ["Sara is my friend. I like ___.", "her", ["he", "they", "it"]], ["The students are late. The teacher is waiting for ___.", "them", ["he", "she", "it"]], ["You and I are friends. ___ play together.", "We", ["He", "They", "She"]], ["Bilal is hungry. ___ wants some food.", "He", ["She", "It", "They"]], ["The bird is singing. ___ is on the tree.", "It", ["He", "She", "They"]], ["Hina and Zara are sisters. ___ study together.", "They", ["He", "She", "It"]], ["I have a new bag. ___ is blue.", "It", ["He", "She", "They"]], ["Ali, Sara and I are going to school. ___ walk together.", "We", ["He", "They", "She"]], ["Zara lost her pen. Can you help ___?", "her", ["he", "they", "it"]], ["I met Ali today. I gave ___ a book.", "him", ["he", "she", "they"]], ["The dog is barking. ___ is scared.", "It", ["He", "She", "We"]]]));
+  /* PART2-EXERCISES */
+  const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => a.topic - b.topic || a.ord - b.ord);
+
+  /* ---------- Hamrid: student screens ---------- */
+  const HM = { st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
+  const HM_BG = ["#cfe2ff", "#ffe3b3", "#d7f5dd", "#f3d9ff", "#ffd6d6", "#d2f3f7"];
+  async function hmRpc(name, body) {
+    const r = await authed("/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const d = await r.json().catch(() => null);
+    if (!r.ok) { const e = new Error("rpc"); e.status = r.status; e.detail = d && (d.message || d.hint || ""); throw e; }
+    return d;
+  }
+  const hmTime = (t) => { if (!t) return ""; const p = String(t).split(":"), h = +p[0]; return ((h % 12) || 12) + ":" + p[1] + " " + (h < 12 ? "AM" : "PM"); };
+  const hmClip = (emoji, big, bg) => '<span class="hm-clip' + (big ? " big" : "") + '" style="--bg:' + (bg || HM_BG[HM_R(HM_BG.length)]) + '"><em>' + emoji + "</em></span>";
+  function hmShow(html, kind) {
+    document.body.classList.toggle("hm-quiz", HM.view === "quiz");
+    const b = $("hmBody"); b.innerHTML = html;
+    b.classList.remove("hm-anim", "hm-anim2"); void b.offsetWidth; b.classList.add(kind === "q" ? "hm-anim2" : "hm-anim");
+    if (kind !== "q") window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function hmBanner() {
+    const s = HM.st;
+    if (!s.enabled) return ["bad", "Exercises are closed right now. Please wait for the admin."];
+    if (!s.in_window) return ["warn", "Exercise time is from " + hmTime(s.open_time) + " to " + hmTime(s.close_time) + ". Please come back in time."];
+    if (s.today_done) return ["ok", "You have finished today's exercise. Come back tomorrow for the next one."];
+    return ["go", "Today's exercise is open. Choose a topic and start."];
+  }
+  const hmReason = (r) => ({ closed: "Exercises are closed right now.", time: "It is not exercise time right now.", done_today: "You have already done today's exercise. Come back tomorrow.", locked: "Pass the previous exercise first.", already_passed: "You have already passed this exercise.", unknown: "This exercise is not available yet." }[r] || "This exercise cannot be started now.");
+  function hmExState(ex) {
+    if (HM.passed.has(ex.id)) return "passed";
+    const prev = HM_EX[ex.topic + "." + (ex.ord - 1)];
+    return prev && !HM.passed.has(prev.id) ? "locked" : "open";
+  }
+  async function hmInit() {
+    HM.view = "home";
+    hmShow('<div class="state"><div class="spinner"></div>Loading...</div>');
+    try {
+      HM.st = await hmRpc("hamrid_status");
+      HM.passed = new Set(HM.st.passed || []);
+      hmHome();
+    } catch (e) {
+      const missing = e.status === 404 || /function|schema cache/i.test(e.detail || "");
+      hmShow('<div class="state">' + (missing ? "Hamrid is not set up yet. The admin must run the Hamrid SQL in Supabase first." : "Could not load. Check your internet and try again.") + '<br><br><button type="button" class="btn small" data-act="retry">Try again</button></div>');
+    }
+  }
+  function hmHome() {
+    HM.view = "home";
+    const b = hmBanner(), total = HM_LIST().length;
+    hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>English grammar exercises</p></div></div>' +
+      '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
+      '<div class="hm-stat"><b>' + HM.passed.size + "</b> of <b>" + total + "</b> exercises passed &bull; 20 questions each &bull; pass mark 17</div>" +
+      '<div class="hm-grid">' + HM_TOPICS.map((t) => {
+        const l = HM_LIST().filter((e) => e.topic === t.id);
+        if (!l.length) return '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>";
+        const p = l.filter((e) => HM.passed.has(e.id)).length;
+        return '<button type="button" class="hm-topic" data-t="' + t.id + '" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + p + "/" + l.length + ' passed</small><span class="hm-pb"><i style="width:' + Math.round(p / l.length * 100) + '%"></i></span></button>';
+      }).join("") + "</div>");
+  }
+  function hmTopic(id) {
+    HM.view = "topic"; HM.topic = id;
+    const t = HM_TOPICS.find((x) => x.id === id), l = HM_LIST().filter((e) => e.topic === id), b = hmBanner();
+    hmShow('<button type="button" class="hm-back" data-act="home">&larr; All topics</button>' +
+      '<div class="hm-hero small">' + hmClip(t.clip, true) + "<div><h3>" + t.name + "</h3><p>" + l.length + " exercises &bull; one by one</p></div></div>" +
+      '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
+      l.map((e) => { const s = hmExState(e); return '<button type="button" class="hm-ex ' + s + '" data-ex="' + e.id + '"' + (s === "locked" ? " disabled" : "") + '><span class="hm-exn">' + e.id + '</span><span class="hm-exname">Exercise ' + e.id + " &middot; " + esc(e.name) + '</span><span class="hm-exst">' + (s === "passed" ? "&#10003; Passed" : s === "locked" ? "&#128274; Locked" : "Open") + "</span></button>"; }).join(""));
+  }
+  function hmIntro(id) {
+    HM.view = "intro"; HM.ex = id;
+    const e = HM_EX[id], t = HM_TOPICS.find((x) => x.id === e.topic), b = hmBanner(), st = hmExState(e), can = b[0] === "go" && st === "open";
+    hmShow('<button type="button" class="hm-back" data-act="topic">&larr; ' + t.name + "</button>" +
+      '<div class="hm-card center">' + hmClip(t.clip, true) + "<h3>Exercise " + e.id + "</h3><p class=\"hm-sub\">" + esc(e.name) + " (" + t.name + ")</p>" +
+      '<ul class="hm-rules"><li><b>20</b> multiple-choice questions</li><li>Choose <b>one</b> answer for each question</li><li>You need <b>17 or more</b> correct to go to the next exercise</li><li>Only <b>one exercise per day</b>. If you leave in the middle, today\'s try is used up</li></ul>' +
+      '<div class="hm-banner ' + (st === "passed" ? "ok" : b[0]) + '" id="hmIntroMsg">' + esc(st === "passed" ? "You have already passed this exercise." : b[1]) + "</div>" +
+      '<button type="button" class="btn block" id="hmStartBtn" data-act="start"' + (can ? "" : " disabled") + ">Start Exercise</button></div>");
+  }
+  async function hmStart() {
+    const btn = $("hmStartBtn"); if (!btn || btn.disabled) return;
+    btn.disabled = true; btn.textContent = "Starting...";
+    try {
+      const r = await hmRpc("hamrid_start", { p_exercise: HM.ex });
+      if (!r.ok) { const m = $("hmIntroMsg"); m.className = "hm-banner bad"; m.textContent = hmReason(r.reason); btn.textContent = "Start Exercise"; if (r.reason === "done_today") { HM.st.today_done = true; } return; }
+      HM.attempt = r.attempt_id; HM.qs = hmBuild(HM_EX[HM.ex].gen); HM.i = 0; HM.sel = -1; HM.ans = []; HM.view = "quiz";
+      hmQuestion(true);
+    } catch (e) { btn.disabled = false; btn.textContent = "Start Exercise"; const m = $("hmIntroMsg"); m.className = "hm-banner bad"; m.textContent = "Could not start. Check your internet and try again."; }
+  }
+  function hmQuestion(first) {
+    const q = HM.qs[HM.i], n = HM.qs.length;
+    hmShow('<div class="hm-qtop"><button type="button" class="hm-exit" data-act="exit">&#10005; Exit</button><span class="hm-qn">Question ' + (HM.i + 1) + " / " + n + '</span></div><div class="hm-bar"><i style="width:' + Math.round(HM.i / n * 100) + '%"></i></div>' +
+      '<div class="hm-qcard">' + hmClip(q.clip) + '<div class="hm-qt">' + esc(q.q) + "</div>" + (q.sent ? '<div class="hm-sent">&ldquo;' + esc(q.sent) + "&rdquo;</div>" : "") + "</div>" +
+      '<div class="hm-opts">' + q.opts.map((o, k) => '<button type="button" class="hm-opt" data-act="opt" data-k="' + k + '"><b>' + "ABCD"[k] + "</b><span>" + esc(o) + "</span></button>").join("") + "</div>" +
+      '<button type="button" class="btn block hm-next" data-act="next" disabled>' + (HM.i === n - 1 ? "Finish" : "Next") + "</button>", first ? "" : "q");
+    HM.sel = -1;
+  }
+  function hmFinish() {
+    const correct = HM.qs.reduce((a, q, i) => a + (HM.ans[i] === q.a ? 1 : 0), 0);
+    HM.last = { ex: HM.ex, correct, total: HM.qs.length, passed: correct >= 17, saved: false, err: false };
+    HM.view = "result"; hmResult(); hmSave();
+  }
+  async function hmSave() {
+    const L = HM.last; L.err = false; L.saved = false; hmResult();
+    try {
+      const r = await hmRpc("hamrid_finish", { p_attempt: HM.attempt, p_correct: L.correct });
+      L.saved = true; if (typeof r.passed === "boolean") L.passed = r.passed;
+      HM.st.today_done = true; if (L.passed) HM.passed.add(L.ex);
+    } catch (e) { L.err = true; }
+    if (HM.view === "result") hmResult(true);
+  }
+  function hmResult(quiet) {
+    const L = HM.last, e = HM_EX[L.ex], bad = L.total - L.correct, pct = Math.round(L.correct / L.total * 100);
+    const wrong = HM.qs.map((q, i) => ({ q, a: HM.ans[i] })).filter((x) => x.a !== x.q.a);
+    const nextEx = HM_EX[e.topic + "." + (e.ord + 1)];
+    hmShow('<div class="hm-card center"><div class="hm-ring" style="--p:' + pct + '"><div><b>' + L.correct + "</b><small>/ " + L.total + "</small></div></div>" +
+      '<div class="hm-pills"><span class="hm-pill g">Correct ' + L.correct + '</span><span class="hm-pill r">Incorrect ' + bad + "</span></div>" +
+      '<h3 class="' + (L.passed ? "okc" : "badc") + '">' + (L.passed ? "&#127881; Well done! You passed" : "You need 17 correct to pass") + "</h3>" +
+      "<p class=\"hm-sub\">Exercise " + e.id + " &middot; " + esc(e.name) + "</p>" +
+      '<p class="hm-note">' + (L.passed ? (nextEx ? "Exercise " + nextEx.id + " will open tomorrow." : "You have finished all exercises of this topic.") : "Try this exercise again tomorrow with new questions.") + "</p>" +
+      '<div class="hm-save ' + (L.err ? "bad" : L.saved ? "ok" : "") + '">' + (L.err ? 'Result could not be saved. <button type="button" class="btn small" data-act="save">Try again</button>' : L.saved ? "&#10003; Your result is saved" : "Saving your result...") + "</div>" +
+      '<button type="button" class="btn block" data-act="home">Back to topics</button></div>' +
+      (wrong.length ? '<h4 class="hm-rh">Review your mistakes</h4>' + wrong.map((x) => '<div class="hm-rev"><div class="hm-revq">' + esc(x.q.q) + (x.q.sent ? " &ldquo;" + esc(x.q.sent) + "&rdquo;" : "") + '</div><div class="hm-revr">Your answer: ' + (x.a >= 0 && x.a != null ? esc(x.q.opts[x.a]) : "-") + '</div><div class="hm-revg">Correct answer: ' + esc(x.q.opts[x.q.a]) + "</div></div>").join("") : ""), quiet ? "q" : "");
+  }
+  $("hmBody").addEventListener("click", (e) => {
+    const t = e.target.closest("[data-t],[data-ex],[data-act]"); if (!t) return;
+    if (t.dataset.t) return hmTopic(+t.dataset.t);
+    if (t.dataset.ex) return hmIntro(t.dataset.ex);
+    const a = t.dataset.act;
+    if (a === "home") hmHome();
+    else if (a === "topic") hmTopic(HM.topic);
+    else if (a === "retry") hmInit();
+    else if (a === "start") hmStart();
+    else if (a === "save") hmSave();
+    else if (a === "opt") {
+      HM.sel = +t.dataset.k;
+      document.querySelectorAll(".hm-opt").forEach((o) => o.classList.toggle("on", o === t));
+      const n = document.querySelector(".hm-next"); if (n) n.disabled = false;
+    } else if (a === "next") {
+      if (HM.sel < 0) return;
+      HM.ans[HM.i] = HM.sel;
+      if (HM.i < HM.qs.length - 1) { HM.i++; hmQuestion(); } else hmFinish();
+    } else if (a === "exit") {
+      if (confirm("If you exit now, today's try is used up and you cannot try again until tomorrow. Exit anyway?")) { HM.view = "home"; hmInit(); }
+    }
+  });
+  window.addEventListener("beforeunload", (e) => { if (HM.view === "quiz") { e.preventDefault(); e.returnValue = ""; } });
 
   /* ---------- splash ---------- */
   (function () {
