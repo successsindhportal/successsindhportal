@@ -932,6 +932,11 @@
   .hm-exn { width: 38px; height: 38px; border-radius: 11px; font-size: .78rem; } .hm-exname { font-size: .93rem; } .hm-exst { font-size: .76rem; }
   .hm-banner { padding: 8px 12px; font-size: .86rem; margin-bottom: 8px; border-radius: 12px; } .hm-stat { margin-bottom: 8px; }
   .btn.bad-btn, .btn.bad-btn:disabled { background: #dc2626; color: #fff; opacity: 1; border-color: #b91c1c; box-shadow: none; cursor: not-allowed; }
+  .hm-resbtn.dk { background: linear-gradient(110deg, #0a2552, #1d5fd8); box-shadow: 0 10px 22px rgba(10,37,82,.35); } .hm-resbtn.dk b { color: #fff; } .hm-resbtn.dk small { color: #cfe0ff; }
+  .hm-u { font: inherit; width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-left: 5px solid #1d6fe8; border-radius: 13px; padding: 7px 12px; margin-bottom: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(10,60,160,.1); opacity: 0; animation: hmRow .5s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i, 0) * 50ms); }
+  .hm-u:active { transform: scale(.98); } .hm-u b { color: #0b2a63; font-size: .95rem; } .hm-u small { color: var(--muted); font-weight: 600; font-size: .76rem; }
+  .hm-av { width: 44px; height: 44px; flex: none; border-radius: 50%; object-fit: cover; border: 2px solid #0a2552; background: #eaf1fc; display: grid; place-items: center; font-weight: 800; color: #1d4fa8; }
+  .hm-rh { margin: 14px 2px 8px; color: #0b2a63; }
   .hm-back { font: inherit; background: none; border: 0; color: #1d5fd8; font-weight: 800; padding: 6px 2px; margin-bottom: 8px; cursor: pointer; }
   .hm-ex { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); transition: transform .2s; }
   .hm-ex:active { transform: scale(.98); }
@@ -3859,7 +3864,7 @@ async function buildSlip(app, ov) {
   const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => HM_ALLT.findIndex((x) => x.id === a.topic) - HM_ALLT.findIndex((x) => x.id === b.topic) || a.ord - b.ord);
 
   /* ---------- Hamrid: student screens ---------- */
-  const HM = { res: [], rc: 0, subj: "grammar", st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
+  const HM = { au: [], as: null, ak: "none", res: [], rc: 0, subj: "grammar", st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
   const HM_BG = ["#cfe2ff", "#ffe3b3", "#d7f5dd", "#f3d9ff", "#ffd6d6", "#d2f3f7"];
   async function hmRpc(name, body) {
     const r = await authed("/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
@@ -3908,6 +3913,7 @@ async function buildSlip(app, ov) {
     const cnt = (t) => { const l = HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string")); return [l.filter((e) => HM.passed.has(e.id)).length, l.length]; };
     hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>Choose a subject</p></div></div>' +
       '<button type="button" class="hm-resbtn" data-act="results"><span>\uD83D\uDCCB</span><b>Exercise Results</b><small>See your results and download the PDF</small></button>' +
+      (isAdmin ? '<button type="button" class="hm-resbtn dk" data-act="adata"><span>\uD83D\uDCCA</span><b>Data (Admin)</b><small>Who did, passed or failed the exercises</small></button>' : "") +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       '<div class="hm-grid">' + HM_SUBJ.map((t, i) => { const c = cnt(t);
         return t.on
@@ -4055,8 +4061,76 @@ async function buildSlip(app, ov) {
     catch (e) { btn.textContent = "Download PDF"; if (m) m.textContent = "Could not make the PDF. Please try again."; }
     btn.disabled = false;
   }
+  /* ---------- Hamrid: admin Data ---------- */
+  const HM_AK = { none: ["Have not done any exercise", "\uD83D\uDE34", "#6b7a99"], fail: ["Failed (less than 17 correct)", "\u274C", "#dc2626"], pass: ["Passed (17 or more correct)", "\u2705", "#16a34a"] };
+  const hmAv = (u, big) => (u.photo_url ? '<img class="hm-av' + (big ? " big" : "") + '" alt="" src="' + esc(u.photo_url) + '">' : '<span class="hm-av' + (big ? " big" : "") + '">' + esc((u.name || "?").charAt(0).toUpperCase()) + "</span>");
+  const hmABack = '<button type="button" class="hm-back" data-act="home">&larr; All subjects</button>';
+  function hmAData() {
+    HM.view = "adata";
+    hmShow(hmABack + '<div class="hm-hero">' + hmClip("\uD83D\uDCCA", true, "#ffe3b3") + "<div><h3>Hamrid Data</h3><p>Admin only</p></div></div>" +
+      '<div class="hm-grid">' + Object.keys(HM_AK).map((k, i) => '<button type="button" class="hm-topic" data-act="alist" data-k="' + k + '" style="--c:' + HM_AK[k][2] + ";--i:" + i + '">' + hmClip(HM_AK[k][1]) + '<span class="hm-bt"><b>' + HM_AK[k][0] + "</b><small>Tap to see the students</small></span></button>").join("") + "</div>");
+  }
+  async function hmAList(k) {
+    HM.view = "alist"; HM.ak = k;
+    const head = '<button type="button" class="hm-back" data-act="adata">&larr; Data</button><div class="hm-hero">' + hmClip(HM_AK[k][1], true, "#ffe3b3") + "<div><h3>" + HM_AK[k][0] + "</h3><p>Admin only</p></div></div>";
+    hmShow(head + '<div class="state"><div class="spinner"></div>Loading...</div>');
+    try {
+      HM.au = await hmRpc("hamrid_admin_list", { p_kind: k });
+      hmShow(head.replace("<p>Admin only</p>", "<p>" + HM.au.length + " student" + (HM.au.length === 1 ? "" : "s") + "</p>") + (HM.au.length ? HM.au.map((u, i) => '<button type="button" class="hm-u" style="--i:' + Math.min(i, 12) + '" data-u="' + i + '">' + hmAv(u) + '<span class="hm-bt"><b>' + esc(u.name || "-") + "</b><small>Class " + esc(u.class || "-") + " &bull; done " + u.done + " &bull; passed " + u.passed + " &bull; failed " + u.failed + "</small></span></button>").join("") : '<div class="state">No student in this list.</div>'));
+    } catch (e) { hmShow(head + '<div class="state">Could not load. If you have not run the admin SQL yet, run it first.<br><br><button type="button" class="btn small" data-act="alist" data-k="' + k + '">Try again</button></div>'); }
+  }
+  async function hmAStudent(i) {
+    HM.view = "astud"; const u0 = HM.au[i], back = '<button type="button" class="hm-back" data-act="alist" data-k="' + HM.ak + '">&larr; Back to list</button>';
+    hmShow(back + '<div class="state"><div class="spinner"></div>Loading...</div>');
+    try {
+      const d = await hmRpc("hamrid_admin_student", { p_user: u0.id }); HM.as = d;
+      const p = d.profile || {}, at = (d.attempts || []).filter((a) => HM_EX[a.exercise_id]), ok = at.filter((a) => a.passed).length;
+      const kv = (a, b) => '<div class="hm-rk"><span>' + a + "</span><b>" + esc(b || "-") + "</b></div>";
+      hmShow(back + '<div class="hm-rcard"><div class="hm-rhead"><b>' + esc(p.name || u0.name) + "</b><small>STUDENT DATA - HAMRID</small></div>" +
+        '<div class="hm-rbody"><div class="hm-rph">' + (p.photo_url ? '<img alt="" src="' + esc(p.photo_url) + '">' : "<em>PHOTO</em>") + '</div><div class="hm-rkvs">' + kv("Father's Name", p.father_name) + kv("Class", p.class) + kv("School", p.school) + kv("D.O.B", p.dob ? fmtD(p.dob) : "-") + kv("B-Form No.", p.cnic) + kv("Phone", p.phone) + kv("City / District", [p.city, p.district].filter(Boolean).join(", ")) + "</div></div>" +
+        '<div class="hm-rnums"><div><span>Finished</span><b>' + at.length + '</b></div><div class="g"><span>Passed</span><b>' + ok + '</b></div><div class="r"><span>Failed</span><b>' + (at.length - ok) + "</b></div></div></div>" +
+        '<h4 class="hm-rh">Exercise results</h4>' + (at.length ? at.map((a) => { const e = HM_EX[a.exercise_id], w = hmWhen(a.finished_at); return '<div class="hm-ex ' + (a.passed ? "passed" : "failed") + '" style="cursor:default"><span class="hm-exn">' + e.id + '</span><span class="hm-exname">' + esc(e.name) + "<small>" + hmSubjName(e) + " &bull; " + w.date + ", " + w.time + '</small></span><span class="hm-exst">' + (a.correct || 0) + "/" + (a.total || 20) + "<br>" + (a.passed ? "Pass" : "Fail") + "</span></div>"; }).join("") : '<div class="state">This student has not finished any exercise.</div>') +
+        '<button type="button" class="btn block" id="hmAPdfBtn" data-act="apdf">Download PDF</button><div class="form-msg" id="hmAPdfMsg"></div>');
+    } catch (e) { hmShow(back + '<div class="state">Could not load this student.</div>'); }
+  }
+  async function buildStudentPdf(p, at) {
+    const W = 595, H = Math.max(560, 372 + at.length * 22 + 44), D = await newPdf(W, H);
+    D.rect(0, 0, W, 66, { fill: "#0a2552" }); D.rect(0, 62, W, 4, { fill: "#f5b400" });
+    D.text("SUCCESS SINDH PORTAL", 28, 34, 20, { bold: true, color: "#ffffff" }); D.text("WAY TO SUCCESS", 28, 52, 9, { bold: true, color: "#f5b400" });
+    D.text("HAMRID - STUDENT REPORT", W - 28, 40, 13, { bold: true, color: "#ffffff", align: "r" });
+    const f = [["NAME", p.name], ["FATHER'S NAME", p.father_name], ["CLASS", p.class], ["SCHOOL", p.school], ["D.O.B", p.dob ? fmtD(p.dob) : "-"], ["B-FORM NO.", p.cnic], ["PHONE", p.phone]];
+    let y = 90; f.forEach((r) => { D.text(r[0], 28, y, 7.5, { bold: true, color: "#5b6b86" }); const v = String(r[1] || "-"); D.text(v, 28, y + 13, D.fit(v, 400, 12, true), { bold: true }); D.line(28, y + 18, 430, y + 18, { color: "#dbe5f6" }); y += 31; });
+    const px = W - 28 - 104; D.rect(px - 2, 88, 108, 140, { stroke: "#0a2552", lw: 1.2 });
+    let ok = false;
+    try { const r = await fetch(p.photo_url); if (!r.ok) throw 0; const buf = await r.arrayBuffer(); let img; try { img = await D.doc.embedJpg(buf); } catch (x) { img = await D.doc.embedPng(buf); } D.page.drawImage(img, { x: px, y: H - 90 - 136, width: 104, height: 136 }); ok = true; } catch (x) {}
+    if (!ok) { D.rect(px, 90, 104, 136, { fill: "#eaf1fc" }); D.text("PHOTO", px + 52, 162, 11, { bold: true, color: "#5b6b86", align: "c" }); }
+    const pass = at.filter((a) => a.passed).length;
+    D.rect(28, 318, W - 56, 40, { fill: "#eaf1fc", stroke: "#0a2552", lw: 1 });
+    D.text("FINISHED  " + at.length, 60, 343, 12, { bold: true, color: "#0a2552" }); D.text("PASSED  " + pass, 250, 343, 12, { bold: true, color: "#15803d" }); D.text("FAILED  " + (at.length - pass), 420, 343, 12, { bold: true, color: "#c0312b" });
+    let ty = 384;
+    D.rect(28, ty - 14, W - 56, 20, { fill: "#0a2552" });
+    D.text("EXERCISE", 36, ty, 8.5, { bold: true, color: "#ffffff" }); D.text("DATE AND TIME", 300, ty, 8.5, { bold: true, color: "#ffffff" }); D.text("CORRECT", 440, ty, 8.5, { bold: true, color: "#ffffff" }); D.text("REMARK", 505, ty, 8.5, { bold: true, color: "#ffffff" });
+    ty += 22;
+    if (!at.length) D.text("No exercise finished yet.", 36, ty, 10, { color: "#5b6b86" });
+    at.forEach((a, i) => { const e = HM_EX[a.exercise_id], w = hmWhen(a.finished_at); if (i % 2 === 0) D.rect(28, ty - 13, W - 56, 22, { fill: "#f4f8ff" });
+      const nm = e.id + " " + e.name; D.text(nm, 36, ty, D.fit(nm, 250, 9.5, false), {}); D.text(w.date + ", " + w.time, 300, ty, 9, {}); D.text((a.correct || 0) + "/" + (a.total || 20), 440, ty, 9.5, { bold: true });
+      D.text(a.passed ? "PASS" : "FAIL", 505, ty, 9.5, { bold: true, color: a.passed ? "#15803d" : "#c0312b" }); ty += 22; });
+    D.rect(0, H - 24, W, 24, { fill: "#0a2552" });
+    D.text("SUCCESS SINDH PORTAL  |  Admin: Rashid Ali (SaaQi)  |  Printed " + fmtD(new Date().toISOString()), W / 2, H - 9, 7.5, { bold: true, color: "#ffffff", align: "c" });
+    D.rect(0, 0, W, H, { stroke: "#0a2552", lw: 1.4 });
+    D.doc.setTitle("Hamrid Student Report"); D.doc.setAuthor("SUCCESS SINDH PORTAL");
+    return { bytes: await D.doc.save(), name: "Hamrid-" + String(p.name || "student").replace(/[^A-Za-z0-9]+/g, "-").slice(0, 30) + ".pdf" };
+  }
+  async function hmAPdf() {
+    const btn = $("hmAPdfBtn"), m = $("hmAPdfMsg"); if (!btn || btn.disabled || !HM.as) return;
+    btn.disabled = true; btn.textContent = "Preparing PDF...";
+    try { const r = await buildStudentPdf(HM.as.profile || {}, (HM.as.attempts || []).filter((a) => HM_EX[a.exercise_id])); downloadPdf(r.bytes, r.name); }
+    catch (e) { if (m) m.textContent = "Could not make the PDF. Please try again."; }
+    btn.textContent = "Download PDF"; btn.disabled = false;
+  }
   $("hmBody").addEventListener("click", (e) => {
-    const t = e.target.closest("[data-t],[data-ex],[data-act],[data-res]"); if (!t) return;
+    const t = e.target.closest("[data-t],[data-ex],[data-act],[data-res],[data-u]"); if (!t) return;
+    if (t.dataset.u != null) return hmAStudent(+t.dataset.u);
     if (t.dataset.res != null) return hmResCard(+t.dataset.res);
     if (t.dataset.t) return hmTopic(isNaN(+t.dataset.t) ? t.dataset.t : +t.dataset.t);
     if (t.dataset.ex) return hmIntro(t.dataset.ex);
@@ -4064,6 +4138,9 @@ async function buildSlip(app, ov) {
     if (a === "home") hmHome();
     else if (a === "subj") hmSubj(t.dataset.s);
     else if (a === "results") hmResults();
+    else if (a === "adata") hmAData();
+    else if (a === "alist") hmAList(t.dataset.k);
+    else if (a === "apdf") hmAPdf();
     else if (a === "respdf") hmResPdf();
     else if (a === "topic") hmTopic(HM.topic);
     else if (a === "retry") hmInit();
