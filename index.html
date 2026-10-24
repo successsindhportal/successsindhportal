@@ -3549,6 +3549,11 @@ async function buildSlip(app, ov) {
   }
   const hmRow = (rows) => () => { const r = hmPick(rows); return hmQ(r[0], r[1], r[2]); };
   const hmTable = (str) => str.split("|").map((x) => { const p = x.split(":"); return [p[0], p[1], p[2].split(",")]; });
+  const HM_SUBJ = [
+    { id: "grammar", name: "Grammar", clip: "\uD83D\uDCDD", c: "#1d6fe8", on: true }, { id: "maths", name: "Mathematics", clip: "\uD83D\uDD22", c: "#e11d48" },
+    { id: "science", name: "Everyday Science", clip: "\uD83D\uDD2C", c: "#16a34a" }, { id: "computer", name: "Computer", clip: "\uD83D\uDCBB", c: "#8b5cf6" },
+    { id: "gk", name: "G.K", clip: "\uD83C\uDF0D", c: "#f97316" }, { id: "iq", name: "IQ", clip: "\uD83E\uDDE0", c: "#0891b2" }
+  ];
   /* --- exercise registry --- */
   const HM_TOPICS = [
     { id: 1, name: "Letter", clip: "\uD83D\uDD24", c: "#1d6fe8" }, { id: 2, name: "Word", clip: "\uD83D\uDCD6", c: "#8b5cf6" }, { id: 3, name: "Sentence", clip: "\uD83D\uDCAC", c: "#16a34a" },
@@ -3692,8 +3697,18 @@ async function buildSlip(app, ov) {
   }
   function hmHome() {
     HM.view = "home";
+    const b = hmBanner();
+    hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>Choose a subject</p></div></div>' +
+      '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
+      '<div class="hm-grid">' + HM_SUBJ.map((t) => t.on
+        ? '<button type="button" class="hm-topic" data-act="grammar" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + HM.passed.size + " of " + HM_LIST().length + " passed</small></button>"
+        : '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>").join("") + "</div>");
+  }
+  function hmGrammar() {
+    HM.view = "grammar";
     const b = hmBanner(), total = HM_LIST().length;
-    hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>English grammar exercises</p></div></div>' +
+    hmShow('<button type="button" class="hm-back" data-act="home">&larr; All subjects</button>' +
+      '<div class="hm-hero">' + hmClip("\uD83D\uDCDD", true, "#cfe2ff") + '<div><h3>Grammar</h3><p>English grammar exercises</p></div></div>' +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       '<div class="hm-stat"><b>' + HM.passed.size + "</b> of <b>" + total + "</b> exercises passed &bull; 20 questions each &bull; pass mark 17</div>" +
       '<div class="hm-grid">' + HM_TOPICS.map((t) => {
@@ -3706,7 +3721,7 @@ async function buildSlip(app, ov) {
   function hmTopic(id) {
     HM.view = "topic"; HM.topic = id;
     const t = HM_TOPICS.find((x) => x.id === id), l = HM_LIST().filter((e) => e.topic === id), b = hmBanner();
-    hmShow('<button type="button" class="hm-back" data-act="home">&larr; All topics</button>' +
+    hmShow('<button type="button" class="hm-back" data-act="grammar">&larr; All topics</button>' +
       '<div class="hm-hero small">' + hmClip(t.clip, true) + "<div><h3>" + t.name + "</h3><p>" + l.length + " exercises &bull; one by one</p></div></div>" +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       l.map((e) => { const s = hmExState(e); return '<button type="button" class="hm-ex ' + s + '" data-ex="' + e.id + '"' + (s === "locked" ? " disabled" : "") + '><span class="hm-exn">' + e.id + '</span><span class="hm-exname">Exercise ' + e.id + " &middot; " + esc(e.name) + '</span><span class="hm-exst">' + (s === "passed" ? "&#10003; Passed" : s === "locked" ? "&#128274; Locked" : "Open") + "</span></button>"; }).join(""));
@@ -3762,7 +3777,7 @@ async function buildSlip(app, ov) {
       "<p class=\"hm-sub\">Exercise " + e.id + " &middot; " + esc(e.name) + "</p>" +
       '<p class="hm-note">' + (L.passed ? (nextEx ? "Exercise " + nextEx.id + " will open tomorrow." : "You have finished all exercises of this topic.") : "Try this exercise again tomorrow with new questions.") + "</p>" +
       '<div class="hm-save ' + (L.err ? "bad" : L.saved ? "ok" : "") + '">' + (L.err ? 'Result could not be saved. <button type="button" class="btn small" data-act="save">Try again</button>' : L.saved ? "&#10003; Your result is saved" : "Saving your result...") + "</div>" +
-      '<button type="button" class="btn block" data-act="home">Back to topics</button></div>' +
+      '<button type="button" class="btn block" data-act="grammar">Back to topics</button></div>' +
       (wrong.length ? '<h4 class="hm-rh">Review your mistakes</h4>' + wrong.map((x) => '<div class="hm-rev"><div class="hm-revq">' + esc(x.q.q) + (x.q.sent ? " &ldquo;" + esc(x.q.sent) + "&rdquo;" : "") + '</div><div class="hm-revr">Your answer: ' + (x.a >= 0 && x.a != null ? esc(x.q.opts[x.a]) : "-") + '</div><div class="hm-revg">Correct answer: ' + esc(x.q.opts[x.q.a]) + "</div></div>").join("") : ""), quiet ? "q" : "");
   }
   $("hmBody").addEventListener("click", (e) => {
@@ -3771,6 +3786,7 @@ async function buildSlip(app, ov) {
     if (t.dataset.ex) return hmIntro(t.dataset.ex);
     const a = t.dataset.act;
     if (a === "home") hmHome();
+    else if (a === "grammar") hmGrammar();
     else if (a === "topic") hmTopic(HM.topic);
     else if (a === "retry") hmInit();
     else if (a === "start") hmStart();
