@@ -3550,7 +3550,7 @@ async function buildSlip(app, ov) {
   const hmRow = (rows) => () => { const r = hmPick(rows); return hmQ(r[0], r[1], r[2]); };
   const hmTable = (str) => str.split("|").map((x) => { const p = x.split(":"); return [p[0], p[1], p[2].split(",")]; });
   const HM_SUBJ = [
-    { id: "grammar", name: "Grammar", clip: "\uD83D\uDCDD", c: "#1d6fe8", on: true }, { id: "maths", name: "Mathematics", clip: "\uD83D\uDD22", c: "#e11d48" },
+    { id: "grammar", name: "Grammar", clip: "\uD83D\uDCDD", c: "#1d6fe8", on: true }, { id: "maths", name: "Mathematics", clip: "\uD83D\uDD22", c: "#e11d48", on: true },
     { id: "science", name: "Everyday Science", clip: "\uD83D\uDD2C", c: "#16a34a" }, { id: "computer", name: "Computer", clip: "\uD83D\uDCBB", c: "#8b5cf6" },
     { id: "gk", name: "G.K", clip: "\uD83C\uDF0D", c: "#f97316" }, { id: "iq", name: "IQ", clip: "\uD83E\uDDE0", c: "#0891b2" }
   ];
@@ -3561,6 +3561,13 @@ async function buildSlip(app, ov) {
     { id: 7, name: "Verb", clip: "\uD83C\uDFC3", c: "#7c3aed" }, { id: 8, name: "Adverb", clip: "\uD83D\uDE80", c: "#ea580c" }, { id: 9, name: "Adjective", clip: "\uD83C\uDF1F", c: "#ca8a04" },
     { id: 10, name: "Preposition", clip: "\uD83D\uDCE6", c: "#0d9488" }, { id: 11, name: "Conjunction", clip: "\uD83D\uDD17", c: "#db2777" }, { id: 12, name: "Interjection", clip: "\uD83D\uDE2E", c: "#2563eb" }
   ];
+  const HM_TOPICS_M = [
+    { id: "M1", name: "Addition", clip: "\u2795", c: "#16a34a" }, { id: "M2", name: "Subtraction", clip: "\u2796", c: "#e11d48" }, { id: "M3", name: "Multiplication", clip: "\u2716\uFE0F", c: "#8b5cf6" },
+    { id: "M4", name: "Division", clip: "\u2797", c: "#f97316" }, { id: "M5", name: "Even and Odd", clip: "\uD83C\uDFB2", c: "#0891b2" }, { id: "M6", name: "Place Value", clip: "\uD83D\uDD1F", c: "#1d6fe8" },
+    { id: "M7", name: "Comparing", clip: "\u2696\uFE0F", c: "#ca8a04" }, { id: "M8", name: "Fractions", clip: "\uD83C\uDF55", c: "#db2777" }, { id: "M9", name: "Shapes", clip: "\uD83D\uDD37", c: "#0d9488" },
+    { id: "M10", name: "Time and Measurement", clip: "\u23F0", c: "#7c3aed" }
+  ];
+  const HM_ALLT = HM_TOPICS.concat(HM_TOPICS_M);
   const HM_EX = {};
   function hmReg(topic, ord, name, gen) { const id = topic + "." + ord; HM_EX[id] = { id, topic, ord, name, gen }; }
   /* Topic 1: Letter */
@@ -3650,11 +3657,145 @@ async function buildSlip(app, ov) {
   hmReg(6, 1, "Find the Pronoun", () => hmWordQ("pron", "myself yourself himself herself itself ourselves themselves mine yours ours theirs".split(" ")));
   hmReg(6, 2, "Pronoun in Sentences", () => hmPosQ("pron"));
   hmReg(6, 3, "Replace the Noun", hmRow([["Ali is my friend. ___ is very kind.", "He", ["She", "It", "They"]], ["Sara is a doctor. ___ works in a hospital.", "She", ["He", "It", "They"]], ["The book is on the table. ___ is red.", "It", ["He", "She", "They"]], ["Ali and Sara are cousins. ___ live in Sukkur.", "They", ["He", "She", "It"]], ["My mother and I went to the market. ___ bought fruit.", "We", ["He", "They", "She"]], ["The children are playing. ___ are happy.", "They", ["He", "She", "It"]], ["My brother is tall. ___ plays cricket.", "He", ["She", "It", "They"]], ["My sister is in class five. ___ is a good student.", "She", ["He", "It", "They"]], ["The cat is hungry. Please give ___ some milk.", "it", ["he", "they", "we"]], ["Ahmed is calling. Please talk to ___.", "him", ["he", "she", "they"]], ["Sara is my friend. I like ___.", "her", ["he", "they", "it"]], ["The students are late. The teacher is waiting for ___.", "them", ["he", "she", "it"]], ["You and I are friends. ___ play together.", "We", ["He", "They", "She"]], ["Bilal is hungry. ___ wants some food.", "He", ["She", "It", "They"]], ["The bird is singing. ___ is on the tree.", "It", ["He", "She", "They"]], ["Hina and Zara are sisters. ___ study together.", "They", ["He", "She", "It"]], ["I have a new bag. ___ is blue.", "It", ["He", "She", "They"]], ["Ali, Sara and I are going to school. ___ walk together.", "We", ["He", "They", "She"]], ["Zara lost her pen. Can you help ___?", "her", ["he", "they", "it"]], ["I met Ali today. I gave ___ a book.", "him", ["he", "she", "they"]], ["The dog is barking. ___ is scared.", "It", ["He", "She", "We"]]]));
+  /* ===== Mathematics (topics M1 to M10) ===== */
+  const mR = (a, b) => a + HM_R(b - a + 1);
+  const mN = (c) => hmSample([c + 1, c - 1, c + 2, c - 2, c + 3, c - 3, c + 5, c - 5, c + 10, c - 10, c + 9, c + 11].filter((x) => x !== c && x >= 0), 3).map(String);
+  const mS = (c, st) => hmSample([c + st, c - st, c + 2 * st, c - 2 * st, c + 3 * st, c * 10, c + 10 * st].filter((x) => x !== c && x >= 0), 3).map(String);
+  const mA = (t, c) => hmQ(t, String(c), mN(c));
+  const mNm = ["Ali", "Sara", "Ahmed", "Zara", "Bilal", "Hina", "Omar", "Noor", "Hassan", "Ayesha"];
+  const mIt = ["mangoes", "pencils", "books", "apples", "marbles", "stickers", "balloons", "oranges", "biscuits", "pens"];
+  const mPar = (n) => (n % 2 === 0 ? "Even number" : "Odd number");
+  const mParO = ["Even number", "Odd number", "Neither even nor odd", "Both even and odd"];
+  const mDig = (k) => hmSample([1, 2, 3, 4, 5, 6, 7, 8, 9], k);
+  /* M1 Addition */
+  hmReg("M1", 1, "Adding Small Numbers", () => { const a = mR(1, 12), b = mR(1, 9), n = hmPick(mNm), i = hmPick(mIt);
+    if (HM_R(2) === 0) return mA("What is " + a + " + " + b + "?", a + b);
+    return mA(n + " has " + a + " " + i + ". " + hmPick(mNm.filter((x) => x !== n)) + " gives " + n + " " + b + " more. How many " + i + " does " + n + " have now?", a + b); });
+  hmReg("M1", 2, "Two-Digit Addition", () => { const a = mR(10, 99), b = mR(10, 99), n = hmPick(mNm), i = hmPick(mIt);
+    if (HM_R(2) === 0) return mA("What is " + a + " + " + b + "?", a + b);
+    return mA(n + " has " + a + " " + i + " and buys " + b + " more. How many " + i + " are there in all?", a + b); });
+  hmReg("M1", 3, "Missing Number in Addition", () => { const a = mR(2, 30), b = mR(2, 30), t = HM_R(3);
+    if (t === 0) return mA(a + " + ___ = " + (a + b), b);
+    if (t === 1) return mA("___ + " + b + " = " + (a + b), a);
+    return mA("Which number added to " + a + " makes " + (a + b) + "?", b); });
+  /* M2 Subtraction */
+  hmReg("M2", 1, "Subtracting Small Numbers", () => { const a = mR(5, 20), b = mR(1, a - 1), n = hmPick(mNm), i = hmPick(mIt);
+    if (HM_R(2) === 0) return mA("What is " + a + " - " + b + "?", a - b);
+    return mA(n + " had " + a + " " + i + ". " + n + " gave away " + b + ". How many " + i + " are left?", a - b); });
+  hmReg("M2", 2, "Two-Digit Subtraction", () => { const a = mR(30, 99), b = mR(10, a - 5), n = hmPick(mNm), i = hmPick(mIt);
+    if (HM_R(2) === 0) return mA("What is " + a + " - " + b + "?", a - b);
+    return mA(n + " had " + a + " " + i + " and lost " + b + ". How many are left?", a - b); });
+  hmReg("M2", 3, "Subtraction Problems", () => { const t = HM_R(4), a = mR(40, 100), b = mR(11, 39), n = hmPick(mNm);
+    if (t === 0) return mA("A class has " + a + " students. " + b + " are girls. How many are boys?", a - b);
+    if (t === 1) return mA(n + " had Rs. " + a + ". " + n + " spent Rs. " + b + ". How much money is left?", a - b);
+    if (t === 2) return mA("A bus has " + a + " people. " + b + " get off. How many people stay in the bus?", a - b);
+    return mA(a + " - ___ = " + (a - b), b); });
+  /* M3 Multiplication */
+  hmReg("M3", 1, "Tables of 2 to 5", () => { const a = mR(2, 5), b = mR(1, 10);
+    return HM_R(2) === 0 ? mA("What is " + a + " \u00D7 " + b + "?", a * b) : mA("How many are " + a + " groups of " + b + "?", a * b); });
+  hmReg("M3", 2, "Tables of 6 to 10", () => { const a = mR(6, 10), b = mR(2, 10);
+    return HM_R(2) === 0 ? mA("What is " + a + " \u00D7 " + b + "?", a * b) : mA(a + " \u00D7 " + b + " = ?", a * b); });
+  hmReg("M3", 3, "Multiplication Problems", () => { const a = mR(2, 10), b = mR(2, 12), i = hmPick(mIt), t = HM_R(3);
+    if (t === 0) return mA("Each box has " + a + " pencils. How many pencils are in " + b + " boxes?", a * b);
+    if (t === 1) return mA("One packet has " + b + " " + i + ". How many " + i + " are in " + a + " packets?", a * b);
+    return mA("A pen costs Rs. " + a + ". How much do " + b + " pens cost?", a * b); });
+  /* M4 Division */
+  hmReg("M4", 1, "Sharing Equally", () => { const a = mR(2, 9), b = mR(2, 10), n = hmPick(mNm), i = hmPick(mIt);
+    return mA(n + " shares " + a * b + " " + i + " equally among " + a + " children. How many does each child get?", b); });
+  hmReg("M4", 2, "Division Facts", () => { const a = mR(2, 10), b = mR(1, 10);
+    return mA("What is " + a * b + " \u00F7 " + a + "?", b); });
+  hmReg("M4", 3, "Division Problems", () => { const a = mR(2, 9), b = mR(2, 10), i = hmPick(mIt), t = HM_R(3);
+    if (t === 0) return mA("A farmer packs " + a * b + " eggs in boxes of " + a + ". How many boxes are needed?", b);
+    if (t === 1) return mA(a + " \u00D7 ___ = " + a * b, b);
+    return mA("How many groups of " + a + " can be made from " + a * b + " " + i + "?", b); });
+  /* M5 Even and Odd */
+  hmReg("M5", 1, "Even or Odd?", () => { const t = HM_R(3), ev = (n) => n % 2 === 0;
+    if (t === 0) { const e = 2 * mR(1, 49), od = hmSample(Array.from({ length: 50 }, (_, k) => 2 * k + 1), 3); return hmQ("Which of these is an even number?", String(e), od.map(String)); }
+    if (t === 1) { const o = 2 * mR(0, 49) + 1, es = hmSample(Array.from({ length: 49 }, (_, k) => 2 * k + 2), 3); return hmQ("Which of these is an odd number?", String(o), es.map(String)); }
+    const n = mR(1, 99); return hmQ("Is " + n + " an even number or an odd number?", mPar(n), mParO.filter((x) => x !== mPar(n))); });
+  hmReg("M5", 2, "Next Even and Odd Numbers", () => { const n = mR(1, 98), t = HM_R(3);
+    if (t === 0) return mA("What is the next even number after " + n + "?", n % 2 === 0 ? n + 2 : n + 1);
+    if (t === 1) return mA("What is the next odd number after " + n + "?", n % 2 === 1 ? n + 2 : n + 1);
+    const m = mR(3, 99); return mA("What is the even number just before " + m + "?", m % 2 === 0 ? m - 2 : m - 1); });
+  hmReg("M5", 3, "Even and Odd Sums", () => { const t = HM_R(2);
+    if (t === 0) { const a = mR(1, 40), b = mR(1, 40); return hmQ("What kind of number is " + a + " + " + b + "?", mPar(a + b), mParO.filter((x) => x !== mPar(a + b))); }
+    const arr = Array.from({ length: 5 }, () => mR(1, 40)), c = arr.filter((x) => x % 2 === 0).length;
+    return hmQ("How many even numbers are there in: " + arr.join(", ") + "?", String(c), [0, 1, 2, 3, 4, 5].filter((x) => x !== c).map(String)); });
+  /* M6 Place Value */
+  hmReg("M6", 1, "Ones, Tens and Hundreds", () => { const d = mDig(3), n = d[0] * 100 + d[1] * 10 + d[2], t = HM_R(3), other = (x) => hmSample([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter((y) => y !== x), 3).map(String);
+    if (t === 0) return hmQ("In " + n + ", which digit is in the hundreds place?", String(d[0]), other(d[0]));
+    if (t === 1) return hmQ("In " + n + ", which digit is in the tens place?", String(d[1]), other(d[1]));
+    return hmQ("In " + n + ", which digit is in the ones place?", String(d[2]), other(d[2])); });
+  hmReg("M6", 2, "Place Value of a Digit", () => { const d = mDig(3), k = HM_R(3), p = [100, 10, 1][k], n = d[0] * 100 + d[1] * 10 + d[2], dg = d[k], v = dg * p;
+    return hmQ("What is the place value of " + dg + " in " + n + "?", String(v), [dg, dg * 10, dg * 100, dg * 1000].filter((x) => x !== v).map(String)); });
+  hmReg("M6", 3, "Expanded Form", () => { const d = mDig(3), h = d[0], t = d[1], u = d[2], n = h * 100 + t * 10 + u;
+    if (HM_R(2) === 0) return hmQ("Which is the expanded form of " + n + "?", h * 100 + " + " + t * 10 + " + " + u, [h * 100 + " + " + u * 10 + " + " + t, t * 100 + " + " + h * 10 + " + " + u, u * 100 + " + " + t * 10 + " + " + h]);
+    return hmQ("Which number is " + h * 100 + " + " + t * 10 + " + " + u + "?", String(n), [h * 100 + u * 10 + t, t * 100 + h * 10 + u, u * 100 + t * 10 + h].map(String)); });
+  /* M7 Comparing */
+  hmReg("M7", 1, "Greater or Smaller", () => { const x = mR(20, 900), big = HM_R(2) === 0;
+    if (big) return hmQ("Which number is greater than " + x + "?", String(x + mR(1, 15)), [x - mR(1, 8), x - mR(9, 15), x - mR(16, 19)].map(String));
+    return hmQ("Which number is smaller than " + x + "?", String(x - mR(1, 15)), [x + mR(1, 8), x + mR(9, 15), x + mR(16, 19)].map(String)); });
+  hmReg("M7", 2, "Biggest and Smallest", () => { const s = hmSample(Array.from({ length: 90 }, (_, k) => 10 + k * 10 + mR(0, 9)), 4).sort((a, b) => a - b), big = HM_R(2) === 0, c = big ? s[3] : s[0];
+    return hmQ("Which is the " + (big ? "greatest" : "smallest") + " number: " + hmShuf(s).join(", ") + "?", String(c), s.filter((x) => x !== c).map(String)); });
+  hmReg("M7", 3, "Ordering Numbers", () => { const s = hmSample(Array.from({ length: 90 }, (_, k) => 10 + k * 10 + mR(0, 9)), 3).sort((a, b) => a - b), asc = HM_R(2) === 0, c = (asc ? s : s.slice().reverse()).join(", "),
+      perms = [[0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [0, 1, 2], [2, 1, 0]].map((p) => p.map((i) => s[i]).join(", ")).filter((x) => x !== c);
+    return hmQ("Which shows the numbers in " + (asc ? "ascending (smallest to biggest)" : "descending (biggest to smallest)") + " order?", c, hmSample(perms, 3)); });
+  /* M8 Fractions */
+  hmReg("M8", 1, "Half, Quarter and Third", () => { const t = HM_R(4);
+    if (t === 0) { const n = 2 * mR(1, 30); return mA("What is half of " + n + "?", n / 2); }
+    if (t === 1) { const n = 4 * mR(1, 25); return mA("What is a quarter (one fourth) of " + n + "?", n / 4); }
+    if (t === 2) { const n = 3 * mR(1, 20); return mA("What is one third of " + n + "?", n / 3); }
+    return HM_R(2) === 0 ? hmQ("How many quarters make one whole?", "4", ["2", "3", "5", "8"]) : hmQ("How many halves make one whole?", "2", ["1", "3", "4", "6"]); });
+  hmReg("M8", 2, "Parts of a Whole", () => { const n = mR(3, 10), k = mR(1, n - 1), t = HM_R(3);
+    const wr = [k + "/" + (n + 1), n + "/" + k, (n - k) + "/" + n, k + "/" + (n - 1)];
+    if (t === 0) return hmQ("A shape has " + n + " equal parts. " + k + " parts are shaded. What fraction is shaded?", k + "/" + n, wr);
+    if (t === 1) return hmQ("A pizza is cut into " + n + " equal slices. " + hmPick(mNm) + " eats " + k + " slices. What fraction did he or she eat?", k + "/" + n, wr);
+    const d = mR(2, 6), m = mR(2, d), num = d * mR(2, 8); return mA("What is " + (m < d ? m : 1) + "/" + d + " of " + num + "?", (num / d) * (m < d ? m : 1)); });
+  hmReg("M8", 3, "Comparing Fractions", () => { const big = HM_R(2) === 0;
+    if (HM_R(2) === 0) { const d = mR(5, 12), nums = hmSample(Array.from({ length: d - 1 }, (_, i) => i + 1), 4).sort((a, b) => a - b), c = big ? nums[3] : nums[0];
+      return hmQ("Which fraction is the " + (big ? "greatest" : "smallest") + "?", c + "/" + d, nums.filter((x) => x !== c).map((x) => x + "/" + d)); }
+    const ds = hmSample([2, 3, 4, 5, 6, 7, 8, 9, 10], 4).sort((a, b) => a - b), c = big ? ds[0] : ds[3];
+    return hmQ("Which fraction is the " + (big ? "greatest" : "smallest") + "?", "1/" + c, ds.filter((x) => x !== c).map((x) => "1/" + x)); });
+  /* M9 Shapes */
+  const mSh = [["Triangle", 3], ["Square", 4], ["Rectangle", 4], ["Pentagon", 5], ["Hexagon", 6], ["Octagon", 8]];
+  const mShN = mSh.map((x) => x[0]);
+  hmReg("M9", 1, "Names of Shapes", () => { const t = HM_R(4), s = hmPick(mSh);
+    if (t === 0) { const u = hmPick([["Triangle", 3], ["Pentagon", 5], ["Hexagon", 6], ["Octagon", 8]]); return hmQ("Which shape has " + u[1] + " sides?", u[0], mShN.filter((x) => x !== u[0])); }
+    if (t === 1) return hmQ("How many sides does " + (s[0] === "Octagon" ? "an" : "a") + " " + s[0].toLowerCase() + " have?", String(s[1]), [3, 4, 5, 6, 7, 8, 9, 10].filter((x) => x !== s[1]).map(String));
+    if (t === 2) return hmQ("How many corners does " + (s[0] === "Octagon" ? "an" : "a") + " " + s[0].toLowerCase() + " have?", String(s[1]), [3, 4, 5, 6, 7, 8, 9, 10].filter((x) => x !== s[1]).map(String));
+    const o = hmPick([["a wheel", "Circle"], ["a stop sign", "Octagon"], ["a honeycomb cell", "Hexagon"], ["a slice of pizza (the flat side)", "Triangle"], ["a chess board square", "Square"], ["a door", "Rectangle"], ["a coin", "Circle"], ["a book cover", "Rectangle"]]);
+    return hmQ("Which shape does " + o[0] + " look like?", o[1], ["Circle", "Square", "Triangle", "Rectangle", "Hexagon", "Octagon"].filter((x) => x !== o[1])); });
+  hmReg("M9", 2, "Sides and Corners", () => { const s = hmPick(mSh), n = mR(2, 6), t = HM_R(2), w = s[0].toLowerCase() + (n > 1 ? "s" : "");
+    return mA("How many " + (t === 0 ? "sides" : "corners") + " do " + n + " " + w + " have in all?", n * s[1]); });
+  hmReg("M9", 3, "Solid Shapes", () => { const t = HM_R(4);
+    if (t === 0) { const s = hmPick([["cube", "faces", 6], ["cube", "edges", 12], ["cube", "corners", 8], ["cuboid", "faces", 6], ["cuboid", "edges", 12], ["cuboid", "corners", 8]]); return mA("How many " + s[1] + " does a " + s[0] + " have?", s[2]); }
+    if (t === 1) { const o = hmPick([["a dice", "Cube"], ["a ball", "Sphere"], ["a tin can", "Cylinder"], ["an ice-cream cone", "Cone"], ["a brick", "Cuboid"], ["a party hat", "Cone"], ["a shoe box", "Cuboid"], ["a cricket ball", "Sphere"]]); return hmQ("Which solid shape does " + o[0] + " look like?", o[1], ["Cube", "Sphere", "Cylinder", "Cone", "Cuboid"].filter((x) => x !== o[1])); }
+    if (t === 2) { const so = hmPick(["Cube", "Sphere", "Cone", "Cylinder", "Cuboid"]); return hmQ("Which of these is a solid shape?", so, hmSample(["Circle", "Square", "Triangle", "Rectangle", "Hexagon"], 3)); }
+    const fl = hmPick(["Circle", "Square", "Triangle", "Rectangle", "Hexagon"]); return hmQ("Which of these is a flat shape?", fl, hmSample(["Cube", "Sphere", "Cone", "Cylinder", "Cuboid"], 3)); });
+  /* M10 Time and Measurement */
+  const mDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const mMon = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  hmReg("M10", 1, "Days and Months", () => { const t = HM_R(4);
+    if (t === 0) { const k = HM_R(7); return hmQ("Which day comes after " + mDays[k] + "?", mDays[(k + 1) % 7], mDays.filter((x) => x !== mDays[(k + 1) % 7])); }
+    if (t === 1) { const k = HM_R(7); return hmQ("Which day comes before " + mDays[k] + "?", mDays[(k + 6) % 7], mDays.filter((x) => x !== mDays[(k + 6) % 7])); }
+    if (t === 2) { const k = HM_R(12); return hmQ("Which month comes after " + mMon[k] + "?", mMon[(k + 1) % 12], mMon.filter((x) => x !== mMon[(k + 1) % 12])); }
+    const k = HM_R(12); return hmQ("Which month comes before " + mMon[k] + "?", mMon[(k + 11) % 12], mMon.filter((x) => x !== mMon[(k + 11) % 12])); });
+  hmReg("M10", 2, "Telling Time", () => { const t = HM_R(4), n = mR(2, 9);
+    if (t === 0) return hmQ("How many minutes are there in " + n + " hours?", String(60 * n), mS(60 * n, 60));
+    if (t === 1) return hmQ("How many hours are there in " + n + " days?", String(24 * n), mS(24 * n, 24));
+    if (t === 2) return hmQ("How many days are there in " + n + " weeks?", String(7 * n), mS(7 * n, 7));
+    const h = mR(6, 10), d = mR(1, 4), f = (x) => x + ":00"; return hmQ("A class starts at " + f(h) + " and lasts " + d + (d === 1 ? " hour" : " hours") + ". At what time does it end?", f(h + d), [f(h + d + 1), f(h + d - 1), f(h + d + 2)]); });
+  hmReg("M10", 3, "Length, Weight and Money", () => { const t = HM_R(5), n = mR(2, 9);
+    if (t === 0) return hmQ("How many centimetres are there in " + n + " metres?", String(100 * n), mS(100 * n, 100));
+    if (t === 1) return hmQ("How many metres are there in " + n + " kilometres?", String(1000 * n), mS(1000 * n, 1000));
+    if (t === 2) return hmQ("How many grams are there in " + n + " kilograms?", String(1000 * n), mS(1000 * n, 1000));
+    if (t === 3) { const a = hmPick([10, 20, 50, 100]), b = mR(1, 4), c = hmPick([5, 10, 20]); return mA(hmPick(mNm) + " has " + b + " notes of Rs. " + a + " and one note of Rs. " + c + ". How much money does he or she have?", a * b + c); }
+    const p = mR(5, 30); return mA("One pencil costs Rs. " + p + ". How much do " + n + " pencils cost?", p * n); });
   /* PART2-EXERCISES */
-  const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => a.topic - b.topic || a.ord - b.ord);
+  const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => HM_ALLT.findIndex((x) => x.id === a.topic) - HM_ALLT.findIndex((x) => x.id === b.topic) || a.ord - b.ord);
 
   /* ---------- Hamrid: student screens ---------- */
-  const HM = { st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
+  const HM = { subj: "grammar", st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
   const HM_BG = ["#cfe2ff", "#ffe3b3", "#d7f5dd", "#f3d9ff", "#ffd6d6", "#d2f3f7"];
   async function hmRpc(name, body) {
     const r = await authed("/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
@@ -3701,17 +3842,18 @@ async function buildSlip(app, ov) {
     hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>Choose a subject</p></div></div>' +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       '<div class="hm-grid">' + HM_SUBJ.map((t) => t.on
-        ? '<button type="button" class="hm-topic" data-act="grammar" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + HM.passed.size + " of " + HM_LIST().length + " passed</small></button>"
+        ? '<button type="button" class="hm-topic" data-act="subj" data-s="' + t.id + '" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string") && HM.passed.has(e.id)).length + " of " + HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string")).length + " passed</small></button>"
         : '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>").join("") + "</div>");
   }
-  function hmGrammar() {
-    HM.view = "grammar";
-    const b = hmBanner(), total = HM_LIST().length;
+  function hmSubj(sid) {
+    HM.view = "subj"; HM.subj = sid;
+    const M = sid === "maths", TL = M ? HM_TOPICS_M : HM_TOPICS, sj = HM_SUBJ.find((x) => x.id === sid);
+    const b = hmBanner(), all = HM_LIST().filter((e) => (typeof e.topic === "string") === M), done = all.filter((e) => HM.passed.has(e.id)).length;
     hmShow('<button type="button" class="hm-back" data-act="home">&larr; All subjects</button>' +
-      '<div class="hm-hero">' + hmClip("\uD83D\uDCDD", true, "#cfe2ff") + '<div><h3>Grammar</h3><p>English grammar exercises</p></div></div>' +
+      '<div class="hm-hero">' + hmClip(sj.clip, true, "#cfe2ff") + "<div><h3>" + sj.name + "</h3><p>" + (M ? "Maths exercises" : "English grammar exercises") + "</p></div></div>" +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
-      '<div class="hm-stat"><b>' + HM.passed.size + "</b> of <b>" + total + "</b> exercises passed &bull; 20 questions each &bull; pass mark 17</div>" +
-      '<div class="hm-grid">' + HM_TOPICS.map((t) => {
+      '<div class="hm-stat"><b>' + done + "</b> of <b>" + all.length + "</b> exercises passed &bull; 20 questions each &bull; pass mark 17</div>" +
+      '<div class="hm-grid">' + TL.map((t) => {
         const l = HM_LIST().filter((e) => e.topic === t.id);
         if (!l.length) return '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>";
         const p = l.filter((e) => HM.passed.has(e.id)).length;
@@ -3720,15 +3862,15 @@ async function buildSlip(app, ov) {
   }
   function hmTopic(id) {
     HM.view = "topic"; HM.topic = id;
-    const t = HM_TOPICS.find((x) => x.id === id), l = HM_LIST().filter((e) => e.topic === id), b = hmBanner();
-    hmShow('<button type="button" class="hm-back" data-act="grammar">&larr; All topics</button>' +
+    const t = HM_ALLT.find((x) => x.id === id), l = HM_LIST().filter((e) => e.topic === id), b = hmBanner();
+    hmShow('<button type="button" class="hm-back" data-act="subj" data-s="' + (typeof id === "string" ? "maths" : "grammar") + '">&larr; All topics</button>' +
       '<div class="hm-hero small">' + hmClip(t.clip, true) + "<div><h3>" + t.name + "</h3><p>" + l.length + " exercises &bull; one by one</p></div></div>" +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       l.map((e) => { const s = hmExState(e); return '<button type="button" class="hm-ex ' + s + '" data-ex="' + e.id + '"' + (s === "locked" ? " disabled" : "") + '><span class="hm-exn">' + e.id + '</span><span class="hm-exname">Exercise ' + e.id + " &middot; " + esc(e.name) + '</span><span class="hm-exst">' + (s === "passed" ? "&#10003; Passed" : s === "locked" ? "&#128274; Locked" : "Open") + "</span></button>"; }).join(""));
   }
   function hmIntro(id) {
     HM.view = "intro"; HM.ex = id;
-    const e = HM_EX[id], t = HM_TOPICS.find((x) => x.id === e.topic), b = hmBanner(), st = hmExState(e), can = b[0] === "go" && st === "open";
+    const e = HM_EX[id], t = HM_ALLT.find((x) => x.id === e.topic), b = hmBanner(), st = hmExState(e), can = b[0] === "go" && st === "open";
     hmShow('<button type="button" class="hm-back" data-act="topic">&larr; ' + t.name + "</button>" +
       '<div class="hm-card center">' + hmClip(t.clip, true) + "<h3>Exercise " + e.id + "</h3><p class=\"hm-sub\">" + esc(e.name) + " (" + t.name + ")</p>" +
       '<ul class="hm-rules"><li><b>20</b> multiple-choice questions</li><li>Choose <b>one</b> answer for each question</li><li>You need <b>17 or more</b> correct to go to the next exercise</li><li>Only <b>one exercise per day</b>. If you leave in the middle, today\'s try is used up</li></ul>' +
@@ -3777,16 +3919,16 @@ async function buildSlip(app, ov) {
       "<p class=\"hm-sub\">Exercise " + e.id + " &middot; " + esc(e.name) + "</p>" +
       '<p class="hm-note">' + (L.passed ? (nextEx ? "Exercise " + nextEx.id + " will open tomorrow." : "You have finished all exercises of this topic.") : "Try this exercise again tomorrow with new questions.") + "</p>" +
       '<div class="hm-save ' + (L.err ? "bad" : L.saved ? "ok" : "") + '">' + (L.err ? 'Result could not be saved. <button type="button" class="btn small" data-act="save">Try again</button>' : L.saved ? "&#10003; Your result is saved" : "Saving your result...") + "</div>" +
-      '<button type="button" class="btn block" data-act="grammar">Back to topics</button></div>' +
+      '<button type="button" class="btn block" data-act="subj" data-s="' + (typeof e.topic === "string" ? "maths" : "grammar") + '">Back to topics</button></div>' +
       (wrong.length ? '<h4 class="hm-rh">Review your mistakes</h4>' + wrong.map((x) => '<div class="hm-rev"><div class="hm-revq">' + esc(x.q.q) + (x.q.sent ? " &ldquo;" + esc(x.q.sent) + "&rdquo;" : "") + '</div><div class="hm-revr">Your answer: ' + (x.a >= 0 && x.a != null ? esc(x.q.opts[x.a]) : "-") + '</div><div class="hm-revg">Correct answer: ' + esc(x.q.opts[x.q.a]) + "</div></div>").join("") : ""), quiet ? "q" : "");
   }
   $("hmBody").addEventListener("click", (e) => {
     const t = e.target.closest("[data-t],[data-ex],[data-act]"); if (!t) return;
-    if (t.dataset.t) return hmTopic(+t.dataset.t);
+    if (t.dataset.t) return hmTopic(isNaN(+t.dataset.t) ? t.dataset.t : +t.dataset.t);
     if (t.dataset.ex) return hmIntro(t.dataset.ex);
     const a = t.dataset.act;
     if (a === "home") hmHome();
-    else if (a === "grammar") hmGrammar();
+    else if (a === "subj") hmSubj(t.dataset.s);
     else if (a === "topic") hmTopic(HM.topic);
     else if (a === "retry") hmInit();
     else if (a === "start") hmStart();
