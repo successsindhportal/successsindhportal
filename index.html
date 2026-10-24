@@ -886,6 +886,23 @@
   .hm-topic.soon:hover { transform: none; box-shadow: var(--shadow); }
   .hm-pb { width: 80%; height: 6px; border-radius: 6px; background: #e3ebf8; overflow: hidden; }
   .hm-pb i { display: block; height: 100%; background: linear-gradient(90deg, #16a34a, #4ade80); border-radius: 6px; }
+  /* Hamrid banner-list design */
+  .hm-hero { background: linear-gradient(120deg, #0b2a63, #1d5fd8); border-bottom: 4px solid #f5b400; border-radius: 22px; padding: 14px 16px; box-shadow: 0 14px 28px rgba(11,42,99,.28); animation: hmRow .6s cubic-bezier(.2,.8,.2,1) both; }
+  .hm-hero h3 { color: #fff; } .hm-hero p { color: #cfe0ff; }
+  .hm-grid { display: flex; flex-direction: column; gap: 12px; perspective: 1100px; }
+  .hm-topic { position: relative; overflow: hidden; width: 100%; flex-direction: row; align-items: center; text-align: left; gap: 14px; padding: 14px 46px 14px 14px; border: 0; border-left: 7px solid var(--c); border-radius: 18px; background: linear-gradient(100deg, #fff 0%, #f1f6ff 100%); box-shadow: 0 8px 20px rgba(10,60,160,.13); opacity: 0; animation: hmRow .6s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i, 0) * 75ms); transform-origin: left center; }
+  .hm-topic::before { content: ""; position: absolute; right: -32px; top: -32px; width: 112px; height: 112px; border-radius: 50%; background: var(--c); opacity: .10; }
+  .hm-topic::after { content: "\203A"; position: absolute; right: 16px; top: 50%; transform: translateY(-54%); font-size: 2.1rem; font-weight: 800; color: var(--c); line-height: 1; }
+  .hm-topic:hover { transform: translateX(6px) rotateY(-4deg); box-shadow: 0 16px 30px rgba(10,60,160,.22); }
+  .hm-topic.soon { --o: .6; border-left-color: #cbd5e6; }
+  .hm-topic.soon::after { content: "\1F512"; font-size: 1.1rem; color: #98a6c1; }
+  .hm-bt { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+  .hm-bt b { font-size: 1.1rem; } .hm-bt .hm-pb { width: 100%; margin-top: 5px; }
+  .hm-ex { opacity: 0; animation: hmRow .55s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i, 0) * 60ms); border-left: 6px solid #1d6fe8; }
+  .hm-ex.passed { border-left-color: #16a34a; } .hm-ex.locked { border-left-color: #98a6c1; }
+  @keyframes hmRow { from { opacity: 0; transform: perspective(800px) translateX(-42px) rotateY(-24deg); } to { opacity: var(--o, 1); transform: none; } }
+  .hm-sent { background: linear-gradient(135deg, #eef4ff, #d9e8ff); box-shadow: 0 14px 26px rgba(29,111,232,.28); animation: hmSent .95s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes hmSent { 0% { opacity: 0; transform: perspective(600px) rotateX(-80deg) translateY(-24px) scale(.88); } 60% { opacity: 1; transform: perspective(600px) rotateX(12deg) scale(1.02); } 100% { opacity: 1; transform: perspective(600px) rotateX(0) scale(1); } }
   .hm-back { font: inherit; background: none; border: 0; color: #1d5fd8; font-weight: 800; padding: 6px 2px; margin-bottom: 8px; cursor: pointer; }
   .hm-ex { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); transition: transform .2s; }
   .hm-ex:active { transform: scale(.98); }
@@ -3515,7 +3532,7 @@ async function buildSlip(app, ov) {
     interj: ["Wow!", "Hurray!", "Oh!", "Alas!", "Ouch!", "Oops!", "Bravo!", "Hey!"]
   };
   const HM_LBL = { noun: "a noun", pron: "a pronoun", verb: "a verb", adv: "an adverb", adj: "an adjective", prep: "a preposition", conj: "a conjunction", interj: "an interjection" };
-  const hmWordQ = (cat, extra) => { const c = hmPick(WC[cat].concat(extra || [])), others = Object.keys(WC).filter((k) => k !== cat).reduce((a, k) => a.concat(WC[k]), []); return hmQ("Which of these words is " + HM_LBL[cat] + "?", c, hmSample(others, 3)); };
+  const hmWordQ = (cat, extra) => { const own = WC[cat].concat(extra || []), others = Object.keys(WC).filter((k) => k !== cat).reduce((a, k) => a.concat(WC[k]), []); if (HM_R(4) === 0) return hmQ("Which of these words is NOT " + HM_LBL[cat] + "?", hmPick(others), hmSample(own, 3)); return hmQ("Which of these words is " + HM_LBL[cat] + "?", hmPick(own), hmSample(others, 3)); };
   /* --- sentences with known parts of speech --- */
   const SN = "boy girl teacher farmer doctor bird dog cat horse driver student baby".split(" ");
   const SA = "tall happy clever small kind brave smart tired young strong".split(" ");
@@ -3791,6 +3808,10 @@ async function buildSlip(app, ov) {
     if (t === 2) return hmQ("How many grams are there in " + n + " kilograms?", String(1000 * n), mS(1000 * n, 1000));
     if (t === 3) { const a = hmPick([10, 20, 50, 100]), b = mR(1, 4), c = hmPick([5, 10, 20]); return mA(hmPick(mNm) + " has " + b + " notes of Rs. " + a + " and one note of Rs. " + c + ". How much money does he or she have?", a * b + c); }
     const p = mR(5, 30); return mA("One pencil costs Rs. " + p + ". How much do " + n + " pencils cost?", p * n); });
+  /* mix vowel and consonant questions in both letter exercises */
+  { const gv = HM_EX["1.1"].gen, gc = HM_EX["1.2"].gen;
+    HM_EX["1.1"].gen = () => (HM_R(10) < 3 ? gc() : gv());
+    HM_EX["1.2"].gen = () => (HM_R(10) < 3 ? gv() : gc()); }
   /* PART2-EXERCISES */
   const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => HM_ALLT.findIndex((x) => x.id === a.topic) - HM_ALLT.findIndex((x) => x.id === b.topic) || a.ord - b.ord);
 
@@ -3839,11 +3860,13 @@ async function buildSlip(app, ov) {
   function hmHome() {
     HM.view = "home";
     const b = hmBanner();
+    const cnt = (t) => { const l = HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string")); return [l.filter((e) => HM.passed.has(e.id)).length, l.length]; };
     hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>Choose a subject</p></div></div>' +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
-      '<div class="hm-grid">' + HM_SUBJ.map((t) => t.on
-        ? '<button type="button" class="hm-topic" data-act="subj" data-s="' + t.id + '" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string") && HM.passed.has(e.id)).length + " of " + HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string")).length + " passed</small></button>"
-        : '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>").join("") + "</div>");
+      '<div class="hm-grid">' + HM_SUBJ.map((t, i) => { const c = cnt(t);
+        return t.on
+          ? '<button type="button" class="hm-topic" data-act="subj" data-s="' + t.id + '" style="--c:' + t.c + ";--i:" + i + '">' + hmClip(t.clip) + '<span class="hm-bt"><b>' + t.name + "</b><small>" + c[0] + " of " + c[1] + ' exercises passed</small><span class="hm-pb"><i style="width:' + Math.round(c[0] / c[1] * 100) + '%"></i></span></span></button>'
+          : '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + ";--i:" + i + '">' + hmClip(t.clip, false, "#e6ebf5") + '<span class="hm-bt"><b>' + t.name + "</b><small>Coming soon</small></span></button>"; }).join("") + "</div>");
   }
   function hmSubj(sid) {
     HM.view = "subj"; HM.subj = sid;
@@ -3853,11 +3876,11 @@ async function buildSlip(app, ov) {
       '<div class="hm-hero">' + hmClip(sj.clip, true, "#cfe2ff") + "<div><h3>" + sj.name + "</h3><p>" + (M ? "Maths exercises" : "English grammar exercises") + "</p></div></div>" +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       '<div class="hm-stat"><b>' + done + "</b> of <b>" + all.length + "</b> exercises passed &bull; 20 questions each &bull; pass mark 17</div>" +
-      '<div class="hm-grid">' + TL.map((t) => {
+      '<div class="hm-grid">' + TL.map((t, i) => {
         const l = HM_LIST().filter((e) => e.topic === t.id);
-        if (!l.length) return '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + '">' + hmClip(t.clip, false, "#e6ebf5") + "<b>" + t.name + "</b><small>Coming soon</small></button>";
+        if (!l.length) return '<button type="button" class="hm-topic soon" disabled style="--c:' + t.c + ";--i:" + i + '">' + hmClip(t.clip, false, "#e6ebf5") + '<span class="hm-bt"><b>' + t.name + "</b><small>Coming soon</small></span></button>";
         const p = l.filter((e) => HM.passed.has(e.id)).length;
-        return '<button type="button" class="hm-topic" data-t="' + t.id + '" style="--c:' + t.c + '">' + hmClip(t.clip) + "<b>" + t.name + "</b><small>" + p + "/" + l.length + ' passed</small><span class="hm-pb"><i style="width:' + Math.round(p / l.length * 100) + '%"></i></span></button>';
+        return '<button type="button" class="hm-topic" data-t="' + t.id + '" style="--c:' + t.c + ";--i:" + i + '">' + hmClip(t.clip) + '<span class="hm-bt"><b>' + t.name + "</b><small>" + p + "/" + l.length + ' passed</small><span class="hm-pb"><i style="width:' + Math.round(p / l.length * 100) + '%"></i></span></span></button>';
       }).join("") + "</div>");
   }
   function hmTopic(id) {
@@ -3866,7 +3889,7 @@ async function buildSlip(app, ov) {
     hmShow('<button type="button" class="hm-back" data-act="subj" data-s="' + (typeof id === "string" ? "maths" : "grammar") + '">&larr; All topics</button>' +
       '<div class="hm-hero small">' + hmClip(t.clip, true) + "<div><h3>" + t.name + "</h3><p>" + l.length + " exercises &bull; one by one</p></div></div>" +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
-      l.map((e) => { const s = hmExState(e); return '<button type="button" class="hm-ex ' + s + '" data-ex="' + e.id + '"' + (s === "locked" ? " disabled" : "") + '><span class="hm-exn">' + e.id + '</span><span class="hm-exname">Exercise ' + e.id + " &middot; " + esc(e.name) + '</span><span class="hm-exst">' + (s === "passed" ? "&#10003; Passed" : s === "locked" ? "&#128274; Locked" : "Open") + "</span></button>"; }).join(""));
+      l.map((e, i) => { const s = hmExState(e); return '<button type="button" class="hm-ex ' + s + '" style="--i:' + i + '" data-ex="' + e.id + '"' + (s === "locked" ? " disabled" : "") + '><span class="hm-exn">' + e.id + '</span><span class="hm-exname">Exercise ' + e.id + " &middot; " + esc(e.name) + '</span><span class="hm-exst">' + (s === "passed" ? "&#10003; Passed" : s === "locked" ? "&#128274; Locked" : "Open") + "</span></button>"; }).join(""));
   }
   function hmIntro(id) {
     HM.view = "intro"; HM.ex = id;
