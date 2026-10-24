@@ -903,6 +903,21 @@
   @keyframes hmRow { from { opacity: 0; transform: perspective(800px) translateX(-42px) rotateY(-24deg); } to { opacity: var(--o, 1); transform: none; } }
   .hm-sent { background: linear-gradient(135deg, #eef4ff, #d9e8ff); box-shadow: 0 14px 26px rgba(29,111,232,.28); animation: hmSent .95s cubic-bezier(.2,.8,.2,1) both; }
   @keyframes hmSent { 0% { opacity: 0; transform: perspective(600px) rotateX(-80deg) translateY(-24px) scale(.88); } 60% { opacity: 1; transform: perspective(600px) rotateX(12deg) scale(1.02); } 100% { opacity: 1; transform: perspective(600px) rotateX(0) scale(1); } }
+  .hm-resbtn { font: inherit; width: 100%; display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; text-align: left; background: linear-gradient(110deg, #f5b400, #ffd45e); border: 0; border-radius: 18px; padding: 12px 16px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 10px 22px rgba(245,180,0,.4); animation: hmRow .6s cubic-bezier(.2,.8,.2,1) both; }
+  .hm-resbtn span { grid-row: 1 / 3; font-size: 1.9rem; } .hm-resbtn b { color: #0b2a63; font-size: 1.08rem; } .hm-resbtn small { color: #5a4300; font-weight: 700; }
+  .hm-resbtn:active { transform: scale(.97); }
+  .hm-ex.failed { border-left-color: #dc2626; background: #fff6f6; } .hm-ex.failed .hm-exn { background: linear-gradient(#ef4444, #b91c1c); box-shadow: none; } .hm-ex.failed .hm-exst { color: #c0312b; }
+  .hm-exname small { display: block; color: var(--muted); font-weight: 600; font-size: .78rem; margin-top: 2px; } .hm-exst { text-align: right; line-height: 1.3; }
+  .hm-rcard { background: #fff; border: 2px solid #0a2552; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 32px rgba(10,60,160,.22); margin-bottom: 14px; animation: hmSent .9s cubic-bezier(.2,.8,.2,1) both; }
+  .hm-rhead { background: linear-gradient(120deg, #0a2552, #1d5fd8); border-bottom: 4px solid #f5b400; padding: 12px 14px; color: #fff; display: flex; flex-direction: column; gap: 1px; }
+  .hm-rhead b { font-family: "Fraunces", Georgia, serif; font-size: 1.15rem; } .hm-rhead small { color: #f5b400; font-weight: 800; letter-spacing: .08em; font-size: .7rem; } .hm-rhead span { font-weight: 800; font-size: .82rem; margin-top: 4px; }
+  .hm-rbody { display: flex; gap: 12px; padding: 14px; } .hm-rkvs { flex: 1; min-width: 0; display: grid; gap: 6px; }
+  .hm-rph { width: 92px; height: 122px; flex: none; border: 2px solid #0a2552; border-radius: 10px; overflow: hidden; background: #eaf1fc; display: grid; place-items: center; color: #5b6b86; font-weight: 800; font-style: normal; }
+  .hm-rph img { width: 100%; height: 100%; object-fit: cover; }
+  .hm-rk { border-bottom: 1px solid #dbe5f6; padding-bottom: 3px; } .hm-rk span { display: block; font-size: .66rem; font-weight: 800; color: #5b6b86; letter-spacing: .05em; text-transform: uppercase; } .hm-rk b { color: #0b2a63; font-size: .95rem; overflow-wrap: anywhere; }
+  .hm-rex { background: #eaf1fc; padding: 10px 14px; display: grid; gap: 8px; }
+  .hm-rnums { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; padding: 12px 8px; }
+  .hm-rnums span { display: block; font-size: .68rem; font-weight: 800; color: #5b6b86; text-transform: uppercase; } .hm-rnums b { font-size: 1.7rem; } .hm-rnums .g b { color: #15803d; } .hm-rnums .r b { color: #c0312b; }
   .hm-back { font: inherit; background: none; border: 0; color: #1d5fd8; font-weight: 800; padding: 6px 2px; margin-bottom: 8px; cursor: pointer; }
   .hm-ex { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); transition: transform .2s; }
   .hm-ex:active { transform: scale(.98); }
@@ -1253,6 +1268,10 @@
             <label for="p_cnic">B-Form / C.N.I.C No. <span class="req">*</span></label>
             <input type="text" id="p_cnic" inputmode="numeric" maxlength="13" placeholder="13 digits, no dashes">
             <div class="err">Enter 13 digits without dashes.</div>
+          </div>
+          <div class="field">
+            <label for="p_dob">Date of Birth</label>
+            <input type="date" id="p_dob">
           </div>
 
           <div class="sec">Education</div>
@@ -2008,7 +2027,7 @@
   function fillProfileForm() {
     clearInvalid($("profileForm")); msg("profMsg", "");
     const p = profile || {};
-    $("p_name").value = p.name || ""; $("p_father").value = p.father_name || ""; $("p_cnic").value = p.cnic || "";
+    $("p_name").value = p.name || ""; $("p_father").value = p.father_name || ""; $("p_cnic").value = p.cnic || ""; $("p_dob").value = p.dob || "";
     $("p_cls").value = p.class || ""; $("p_school").value = p.school || "";
     $("p_phone").value = phoneDigits(p.phone);
     $("p_city").value = p.city || ""; $("p_district").value = p.district || "";
@@ -2121,7 +2140,7 @@
       const row = {
         id: session.user.id, photo_url: photoUrl, name: $("p_name").value.trim(), father_name: $("p_father").value.trim(),
         cnic: $("p_cnic").value, class: cls, phone: "+92" + $("p_phone").value,
-        school: $("p_school").value.trim(), city: $("p_city").value, district: $("p_district").value,
+        school: $("p_school").value.trim(), city: $("p_city").value, district: $("p_district").value, dob: $("p_dob").value || null,
         marksheet_url: marksheetUrl
       };
       const r = await authed("/rest/v1/student_profiles?on_conflict=id", {
@@ -3816,7 +3835,7 @@ async function buildSlip(app, ov) {
   const HM_LIST = () => Object.keys(HM_EX).map((k) => HM_EX[k]).sort((a, b) => HM_ALLT.findIndex((x) => x.id === a.topic) - HM_ALLT.findIndex((x) => x.id === b.topic) || a.ord - b.ord);
 
   /* ---------- Hamrid: student screens ---------- */
-  const HM = { subj: "grammar", st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
+  const HM = { res: [], rc: 0, subj: "grammar", st: null, passed: new Set(), topic: null, ex: null, qs: [], i: 0, sel: -1, ans: [], attempt: null, last: null, view: "home" };
   const HM_BG = ["#cfe2ff", "#ffe3b3", "#d7f5dd", "#f3d9ff", "#ffd6d6", "#d2f3f7"];
   async function hmRpc(name, body) {
     const r = await authed("/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
@@ -3862,6 +3881,7 @@ async function buildSlip(app, ov) {
     const b = hmBanner();
     const cnt = (t) => { const l = HM_LIST().filter((e) => (t.id === "maths") === (typeof e.topic === "string")); return [l.filter((e) => HM.passed.has(e.id)).length, l.length]; };
     hmShow('<div class="hm-hero">' + hmClip("\uD83C\uDF93", true, "#cfe2ff") + '<div><h3>Hamrid</h3><p>Choose a subject</p></div></div>' +
+      '<button type="button" class="hm-resbtn" data-act="results"><span>\uD83D\uDCCB</span><b>Exercise Results</b><small>See your results and download the PDF</small></button>' +
       '<div class="hm-banner ' + b[0] + '">' + esc(b[1]) + "</div>" +
       '<div class="hm-grid">' + HM_SUBJ.map((t, i) => { const c = cnt(t);
         return t.on
@@ -3945,13 +3965,80 @@ async function buildSlip(app, ov) {
       '<button type="button" class="btn block" data-act="subj" data-s="' + (typeof e.topic === "string" ? "maths" : "grammar") + '">Back to topics</button></div>' +
       (wrong.length ? '<h4 class="hm-rh">Review your mistakes</h4>' + wrong.map((x) => '<div class="hm-rev"><div class="hm-revq">' + esc(x.q.q) + (x.q.sent ? " &ldquo;" + esc(x.q.sent) + "&rdquo;" : "") + '</div><div class="hm-revr">Your answer: ' + (x.a >= 0 && x.a != null ? esc(x.q.opts[x.a]) : "-") + '</div><div class="hm-revg">Correct answer: ' + esc(x.q.opts[x.q.a]) + "</div></div>").join("") : ""), quiet ? "q" : "");
   }
+  /* ---------- Hamrid: Exercise Results (student) ---------- */
+  const hmWhen = (iso) => { const d = new Date(iso); return { date: d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Karachi" }), time: d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "Asia/Karachi" }) }; };
+  const hmSubjName = (e) => (typeof e.topic === "string" ? "Mathematics" : "Grammar");
+  async function hmResults() {
+    HM.view = "results";
+    hmShow('<button type="button" class="hm-back" data-act="home">&larr; All subjects</button><div class="hm-hero">' + hmClip("\uD83D\uDCCB", true, "#ffe3b3") + "<div><h3>Exercise Results</h3><p>Your finished exercises</p></div></div>" + '<div class="state"><div class="spinner"></div>Loading...</div>');
+    try {
+      const r = await authed("/rest/v1/hamrid_attempts?select=id,exercise_id,correct,total,passed,finished_at&status=eq.done&order=finished_at.desc&limit=200");
+      if (!r.ok) throw new Error("res");
+      HM.res = (await r.json()).filter((a) => HM_EX[a.exercise_id]);
+      hmShow('<button type="button" class="hm-back" data-act="home">&larr; All subjects</button><div class="hm-hero">' + hmClip("\uD83D\uDCCB", true, "#ffe3b3") + "<div><h3>Exercise Results</h3><p>" + HM.res.length + " finished exercise" + (HM.res.length === 1 ? "" : "s") + "</p></div></div>" +
+        (HM.res.length ? HM.res.map((a, i) => { const e = HM_EX[a.exercise_id], w = hmWhen(a.finished_at), c = a.correct || 0, t = a.total || 20;
+          return '<button type="button" class="hm-ex ' + (a.passed ? "passed" : "failed") + '" style="--i:' + i + '" data-res="' + i + '"><span class="hm-exn">' + e.id + '</span><span class="hm-exname">' + esc(e.name) + "<small>" + esc(hmSubjName(e)) + " &bull; " + w.date + ", " + w.time + '</small></span><span class="hm-exst">' + c + "/" + t + "<br>" + (a.passed ? "Pass" : "Fail") + "</span></button>"; }).join("") : '<div class="state">No finished exercise yet. Complete an exercise and its result will appear here.</div>'));
+    } catch (e) { hmShow('<button type="button" class="hm-back" data-act="home">&larr; All subjects</button><div class="state">Could not load results. Check your internet and try again.<br><br><button type="button" class="btn small" data-act="results">Try again</button></div>'); }
+  }
+  function hmResCard(i) {
+    HM.view = "rescard"; HM.rc = i;
+    const a = HM.res[i], e = HM_EX[a.exercise_id], w = hmWhen(a.finished_at), p = profile || {}, c = a.correct || 0, t = a.total || 20, ph = p.photo_url;
+    const kv = (k, v) => '<div class="hm-rk"><span>' + k + "</span><b>" + esc(v || "-") + "</b></div>";
+    hmShow('<button type="button" class="hm-back" data-act="results">&larr; All results</button>' +
+      '<div class="hm-rcard"><div class="hm-rhead"><b>SUCCESS SINDH PORTAL</b><small>WAY TO SUCCESS</small><span>EXERCISE RESULT CARD</span></div>' +
+      '<div class="hm-rbody"><div class="hm-rph">' + (ph ? '<img alt="" src="' + esc(ph) + '">' : "<em>PHOTO</em>") + '</div><div class="hm-rkvs">' +
+      kv("Name", p.name) + kv("Father's Name", p.father_name) + kv("Class", p.class) + kv("School", p.school) + kv("D.O.B", p.dob ? fmtD(p.dob) : "-") + kv("B-Form No.", p.cnic) + (studentId ? kv("Student ID", studentId) : "") + "</div></div>" +
+      '<div class="hm-rex"><div class="hm-rk"><span>Exercise No.</span><b>' + e.id + " &middot; " + esc(e.name) + " (" + hmSubjName(e) + ')</b></div><div class="hm-rk"><span>Date and Time</span><b>' + w.date + ", " + w.time + "</b></div></div>" +
+      '<div class="hm-rnums"><div class="g"><span>Correct</span><b>' + c + '</b></div><div class="r"><span>Incorrect</span><b>' + (t - c) + '</b></div><div class="' + (a.passed ? "g" : "r") + '"><span>Remark</span><b>' + (a.passed ? "PASS" : "FAIL") + "</b></div></div></div>" +
+      '<button type="button" class="btn block" id="hmPdfBtn" data-act="respdf">Download PDF</button><div class="form-msg" id="hmPdfMsg"></div>');
+  }
+  async function buildResultPdf(p, a, sid) {
+    const e = HM_EX[a.exercise_id], w = hmWhen(a.finished_at), c = a.correct || 0, t = a.total || 20, W = 595, H = 420;
+    const D = await newPdf(W, H);
+    D.rect(0, 0, W, H, { fill: "#ffffff" });
+    D.rect(0, 0, W, 66, { fill: "#0a2552" }); D.rect(0, 62, W, 4, { fill: "#f5b400" });
+    D.text("SUCCESS SINDH PORTAL", 28, 34, 20, { bold: true, color: "#ffffff" }); D.text("WAY TO SUCCESS", 28, 52, 9, { bold: true, color: "#f5b400" });
+    D.text("EXERCISE RESULT CARD", W - 28, 40, 13, { bold: true, color: "#ffffff", align: "r" });
+    const fields = [["NAME", p.name], ["FATHER'S NAME", p.father_name], ["CLASS", p.class], ["SCHOOL", p.school], ["D.O.B", p.dob ? fmtD(p.dob) : "-"], ["B-FORM NO.", p.cnic]];
+    let y = 90;
+    fields.forEach((f) => { D.text(f[0], 28, y, 7.5, { bold: true, color: "#5b6b86" }); const v = String(f[1] || "-"); D.text(v, 28, y + 13, D.fit(v, 400, 12, true), { bold: true }); D.line(28, y + 18, 430, y + 18, { color: "#dbe5f6" }); y += 31; });
+    const px = W - 28 - 104; D.rect(px - 2, 88, 108, 140, { stroke: "#0a2552", lw: 1.2 });
+    let ok = false;
+    try { const r = await fetch(p.photo_url); if (!r.ok) throw 0; const buf = await r.arrayBuffer(); let img; try { img = await D.doc.embedJpg(buf); } catch (x) { img = await D.doc.embedPng(buf); } D.page.drawImage(img, { x: px, y: H - 90 - 136, width: 104, height: 136 }); ok = true; } catch (x) {}
+    if (!ok) { D.rect(px, 90, 104, 136, { fill: "#eaf1fc" }); D.text("PHOTO", px + 52, 162, 11, { bold: true, color: "#5b6b86", align: "c" }); }
+    if (sid) { D.text("STUDENT ID", px + 52, 244, 7.5, { bold: true, color: "#5b6b86", align: "c" }); D.text(sid, px + 52, 260, 13, { bold: true, color: "#0a2552", align: "c" }); }
+    D.rect(28, 282, W - 56, 104, { fill: "#eaf1fc", stroke: "#0a2552", lw: 1 });
+    D.text("EXERCISE NO.", 40, 298, 7.5, { bold: true, color: "#5b6b86" });
+    const en = e.id + " - " + e.name + " (" + hmSubjName(e) + ")"; D.text(en, 40, 312, D.fit(en, 300, 11.5, true), { bold: true, color: "#0a2552" });
+    D.text("DATE AND TIME", 370, 298, 7.5, { bold: true, color: "#5b6b86" }); D.text(w.date + ", " + w.time, 370, 312, 11.5, { bold: true, color: "#0a2552" });
+    D.line(40, 324, W - 40, 324, { color: "#9db3d8" });
+    D.text("CORRECT", 40, 342, 7.5, { bold: true, color: "#5b6b86" }); D.text(String(c), 40, 368, 24, { bold: true, color: "#15803d" });
+    D.text("INCORRECT", 170, 342, 7.5, { bold: true, color: "#5b6b86" }); D.text(String(t - c), 170, 368, 24, { bold: true, color: "#c0312b" });
+    D.text("SCORE", 300, 342, 7.5, { bold: true, color: "#5b6b86" }); D.text(c + " / " + t, 300, 368, 24, { bold: true, color: "#0a2552" });
+    D.text("REMARK", 430, 342, 7.5, { bold: true, color: "#5b6b86" }); D.text(a.passed ? "PASS" : "FAIL", 430, 368, 24, { bold: true, color: a.passed ? "#15803d" : "#c0312b" });
+    D.rect(0, 396, W, 24, { fill: "#0a2552" });
+    D.text("SUCCESS SINDH PORTAL  |  Admin: Rashid Ali (SaaQi)  |  Printed " + fmtD(new Date().toISOString()), W / 2, 411, 7.5, { bold: true, color: "#ffffff", align: "c" });
+    D.rect(0, 0, W, H, { stroke: "#0a2552", lw: 1.4 });
+    D.doc.setTitle("Exercise Result " + e.id); D.doc.setAuthor("SUCCESS SINDH PORTAL");
+    return { bytes: await D.doc.save(), name: "Result-" + e.id + "-" + w.date.replace(/\s+/g, "") + ".pdf" };
+  }
+  async function hmResPdf() {
+    const btn = $("hmPdfBtn"), m = $("hmPdfMsg"); if (!btn || btn.disabled) return;
+    btn.disabled = true; btn.textContent = "Preparing PDF...";
+    try { const r = await buildResultPdf(profile || {}, HM.res[HM.rc], studentId); downloadPdf(r.bytes, r.name); btn.textContent = "Download PDF"; }
+    catch (e) { btn.textContent = "Download PDF"; if (m) m.textContent = "Could not make the PDF. Please try again."; }
+    btn.disabled = false;
+  }
   $("hmBody").addEventListener("click", (e) => {
-    const t = e.target.closest("[data-t],[data-ex],[data-act]"); if (!t) return;
+    const t = e.target.closest("[data-t],[data-ex],[data-act],[data-res]"); if (!t) return;
+    if (t.dataset.res != null) return hmResCard(+t.dataset.res);
     if (t.dataset.t) return hmTopic(isNaN(+t.dataset.t) ? t.dataset.t : +t.dataset.t);
     if (t.dataset.ex) return hmIntro(t.dataset.ex);
     const a = t.dataset.act;
     if (a === "home") hmHome();
     else if (a === "subj") hmSubj(t.dataset.s);
+    else if (a === "results") hmResults();
+    else if (a === "respdf") hmResPdf();
     else if (a === "topic") hmTopic(HM.topic);
     else if (a === "retry") hmInit();
     else if (a === "start") hmStart();
