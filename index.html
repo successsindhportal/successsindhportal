@@ -931,6 +931,7 @@
   .hm-ex { padding: 8px 12px; gap: 10px; margin-bottom: 8px; border-radius: 13px; }
   .hm-exn { width: 38px; height: 38px; border-radius: 11px; font-size: .78rem; } .hm-exname { font-size: .93rem; } .hm-exst { font-size: .76rem; }
   .hm-banner { padding: 8px 12px; font-size: .86rem; margin-bottom: 8px; border-radius: 12px; } .hm-stat { margin-bottom: 8px; }
+  .btn.bad-btn, .btn.bad-btn:disabled { background: #dc2626; color: #fff; opacity: 1; border-color: #b91c1c; box-shadow: none; cursor: not-allowed; }
   .hm-back { font: inherit; background: none; border: 0; color: #1d5fd8; font-weight: 800; padding: 6px 2px; margin-bottom: 8px; cursor: pointer; }
   .hm-ex { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); transition: transform .2s; }
   .hm-ex:active { transform: scale(.98); }
@@ -1294,11 +1295,11 @@
             <div class="err">Select your class.</div>
           </div>
           <div class="field" id="msField">
-            <label for="p_marksheet">Marksheet (required for 10th) <span class="req">*</span></label>
+            <label for="p_marksheet" id="msLabel">Previous class marksheet (optional)</label>
             <div class="file"><input type="file" id="p_marksheet" accept="image/jpeg,image/png"></div>
             <img id="p_msPreview" class="preview" alt="Marksheet preview">
             <div class="hint" id="msHint">JPG or PNG photo, up to 5 MB.</div>
-            <div class="err" id="msErr">Upload your marksheet (required for class 10th).</div>
+            <div class="err" id="msErr">Marksheet must be a JPG or PNG photo up to 5 MB.</div>
           </div>
           <div class="field">
             <label for="p_school">School <span class="req">*</span></label>
@@ -1479,7 +1480,7 @@
       <div><h2>Complete your profile</h2></div>
       <button type="button" class="x" id="incClose" aria-label="Close">&times;</button>
     </div>
-    <div class="dlg-body">Please complete your profile first: all fields, and the marksheet for class 10th. After that you can apply in one tap.</div>
+    <div class="dlg-body">Please complete your profile first (all required fields and your photo). After that you can apply in one tap.</div>
     <div class="actions dlg-actions">
       <button type="button" class="btn ghost" id="incCancel">Not now</button>
       <button type="button" class="btn" id="incGo">Complete profile</button>
@@ -1982,7 +1983,7 @@
     const o0 = document.createElement("option"); o0.value = ""; o0.textContent = ph; el.append(o0);
     list.forEach((v) => { const o = document.createElement("option"); o.value = v; o.textContent = v; el.append(o); });
   }
-  fillSelect("p_cls", ["4th", "5th", "6th", "7th", "8th", "9th", "10th"], "Select your class");
+  fillSelect("p_cls", ["4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"], "Select your class");
   fillSelect("p_city", CITIES, "Select your city");
   fillSelect("p_district", DISTRICTS, "Select your district");
 
@@ -1994,7 +1995,7 @@
   }
   function profileComplete(p) {
     return !!p && !!(p.name && p.father_name && /^\d{13}$/.test(p.cnic || "") && p.class &&
-      /^3\d{9}$/.test(phoneDigits(p.phone)) && p.school && p.city && p.district && p.photo_url && (p.class !== "10th" || p.marksheet_url));
+      /^3\d{9}$/.test(phoneDigits(p.phone)) && p.school && p.city && p.district && p.photo_url);
   }
   function updateProfileUI() {
     const ok = profileComplete(profile);
@@ -2049,13 +2050,15 @@
     showPhoto();
     showMarksheet();
   }
+  const PREV_CLS = { "10th": "9th", "11th": "10th", "12th": "11th" };
   function showMarksheet() {
-    const is10 = $("p_cls").value === "10th";
-    $("msField").classList.toggle("show", is10);
+    const cls = $("p_cls").value, prev = PREV_CLS[cls];
+    $("msField").classList.toggle("show", !!prev);
+    if (prev) $("msLabel").textContent = "Marksheet of class " + prev + " (optional)";
     const img = $("p_msPreview"), f = $("p_marksheet").files[0];
     if (f) { img.src = URL.createObjectURL(f); img.style.display = "block"; $("msHint").textContent = "New marksheet selected."; }
-    else if (is10 && profile && profile.marksheet_url) { img.src = profile.marksheet_url; img.style.display = "block"; $("msHint").textContent = "Marksheet uploaded. Choose a new file only to replace it."; }
-    else { img.style.display = "none"; $("msHint").textContent = "JPG or PNG photo, up to 5 MB."; }
+    else if (prev && profile && profile.marksheet_url) { img.src = profile.marksheet_url; img.style.display = "block"; $("msHint").textContent = "Marksheet uploaded. Choose a new file only to replace it."; }
+    else { img.style.display = "none"; $("msHint").textContent = "Optional. JPG or PNG photo, up to 5 MB."; }
   }
   $("p_cls").addEventListener("change", showMarksheet);
   $("p_marksheet").addEventListener("change", () => { $("msField").classList.remove("invalid"); showMarksheet(); });
@@ -2110,14 +2113,14 @@
     bad = mark("p_phone", !/^3\d{9}$/.test($("p_phone").value)) || bad;
     bad = mark("p_city", !$("p_city").value) || bad;
     bad = mark("p_district", !$("p_district").value) || bad;
-    if ($("p_cls").value === "10th") {
+    if (PREV_CLS[$("p_cls").value]) {
       const f = $("p_marksheet").files[0];
       let m = "";
       if (f) {
         if (!/^image\/(jpeg|png)$/.test(f.type)) m = "Marksheet must be a JPG or PNG photo.";
         else if (f.size > 5 * 1024 * 1024) m = "Marksheet is too large. Maximum size is 5 MB.";
-      } else if (!(profile && profile.marksheet_url)) m = "Upload your marksheet (required for class 10th).";
-      $("msErr").textContent = m || "Upload your marksheet (required for class 10th).";
+      }
+      $("msErr").textContent = m || "Marksheet must be a JPG or PNG photo up to 5 MB.";
       bad = mark("p_marksheet", !!m) || bad;
     } else { mark("p_marksheet", false); }
     return !bad;
@@ -2132,7 +2135,7 @@
     try {
       const cls = $("p_cls").value;
       let marksheetUrl = null;
-      if (cls === "10th") {
+      if (PREV_CLS[cls]) {
         marksheetUrl = profile && profile.marksheet_url ? profile.marksheet_url : null;
         const file = $("p_marksheet").files[0];
         if (file) {
@@ -2297,6 +2300,9 @@
     }
   }
 
+  const clsNum = (c) => { const n = parseInt(c, 10); return isNaN(n) ? null : n; };
+  function notEligible(o) { const c = clsNum(profile && profile.class); if (c == null || !o) return false; return (o.min_class != null && c < o.min_class) || (o.max_class != null && c > o.max_class); }
+  const critText = (o) => (o.min_class != null && o.max_class != null ? "Eligible: class " + o.min_class + " to " + o.max_class : o.min_class != null ? "Eligible: class " + o.min_class + " and above" : o.max_class != null ? "Eligible: up to class " + o.max_class : "");
   function renderRows(rows) {
     const list = $("list");
     list.innerHTML = "";
@@ -2323,10 +2329,12 @@
         info.append(d);
       }
 
+      if (critText(o)) { const cr = document.createElement("div"); cr.className = "deadline"; cr.textContent = critText(o); info.append(cr); }
       const b = document.createElement("button");
       b.type = "button"; b.className = "btn";
       if (appliedIds.has(o.id)) { b.textContent = "Applied \u2713"; b.classList.add("done-btn"); b.disabled = true; }
       else if (closed) { b.textContent = "Applications closed"; b.disabled = true; }
+      else if (notEligible(o)) { b.textContent = "Not Eligible"; b.classList.add("bad-btn"); b.disabled = true; }
       else { b.textContent = "Apply"; b.addEventListener("click", () => openForm(o)); }
 
       foot.append(info, b);
@@ -2346,6 +2354,7 @@
   function openForm(o) {
     currentOlympiad = o;
     msg("formMsg", "");
+    if (notEligible(o)) return;
     if (!profileComplete(profile)) { dlgView("inc"); dlg.showModal(); return; }
     $("dlgSub").textContent = o.title;
     const rows = [
@@ -2354,7 +2363,7 @@
       ["School", profile.school], ["City", profile.city], ["District", profile.district]
     ];
     rows.push(["Photo", "Uploaded \u2713"]);
-    if (profile.class === "10th") rows.push(["Marksheet", "Uploaded \u2713"]);
+    if (PREV_CLS[profile.class] && profile.marksheet_url) rows.push(["Marksheet (class " + PREV_CLS[profile.class] + ")", "Uploaded \u2713"]);
     const box = $("summary"); box.innerHTML = "";
     rows.forEach(([k, v]) => {
       const r = document.createElement("div"); r.className = "sum-row";
@@ -2378,7 +2387,8 @@
     const btn = $("submitBtn");
     btn.disabled = true; btn.textContent = "Submitting...";
     try {
-      const is10 = profile.class === "10th";
+      const hasMs = !!(PREV_CLS[profile.class] && profile.marksheet_url);
+      if (notEligible(currentOlympiad)) throw new Error("noelig");
       const res = await authed("/rest/v1/olympiad_applications", {
         method: "POST",
         headers: { "Content-Type": "application/json", Prefer: "return=minimal" },
@@ -2390,7 +2400,7 @@
           class: profile.class,
           phone: "+92" + phoneDigits(profile.phone),
           address: [profile.school, profile.city, profile.district].join(", "),
-          marksheet_url: is10 ? profile.marksheet_url : null
+          marksheet_url: hasMs ? profile.marksheet_url : null
         })
       });
       if (res.status === 409) throw new Error("dup");
@@ -2402,7 +2412,8 @@
       dlgView("done");
       loadOlympiads();
     } catch (err) {
-      msg("formMsg", err.message === "dup" ? "You have already applied for this Olympiad."
+      msg("formMsg", err.message === "noelig" ? "You are not eligible for this Olympiad."
+        : err.message === "dup" ? "You have already applied for this Olympiad."
         : err.message === "expired" ? "Your session expired. Please login again."
         : "Application could not be submitted. Check your internet and try again." + (err.detail ? " (" + err.detail + ")" : ""));
       btn.disabled = false; btn.textContent = "Confirm & Apply";
@@ -3212,7 +3223,7 @@ async function buildSlip(app, ov) {
     profile: (o) => { const f = o.f || {}; return mWrap(mHead(true) + '<div class="m-pg">My Profile</div><div class="m-card">' +
       '<div class="m-lbl">Passport photo *</div><div class="m-photo' + (f.photo ? " has" : "") + '" data-hl="photo">' + (f.photo ? "" : "+") + '</div>' +
       mField("Full name *", "name", "mName", f.name) + mField("Father's name *", "father", "mFather", f.father) + mField("B-Form / CNIC (13 digits) *", "cnic", "mCnic", f.cnic) +
-      mSelect("Class *", "class", "mClass", f.cls) + '<div data-id="mMarkBox"' + (f.cls === "10th" ? "" : " hidden") + '>' + mField("Marksheet photo (10th) *", "mark", "mMark", f.mark) + '</div>' +
+      mSelect("Class *", "class", "mClass", f.cls) + '<div data-id="mMarkBox"' + (f.cls === "10th" ? "" : " hidden") + '>' + mField("Marksheet photo (previous class, optional)", "mark", "mMark", f.mark) + '</div>' +
       mField("School *", "school", "mSchool", f.school) +
       '<div class="m-lbl">Contact No. *</div><div class="m-row"><div class="m-sbtn" style="background:#eaf1fc;color:#0a2552">+92</div><div class="m-input" data-hl="phone"><span data-id="mPhone">' + (f.phone || "") + '</span></div></div>' +
       mSelect("City *", "city", "mCity", f.city) + mSelect("District *", "district", "mDistrict", f.district) +
@@ -3866,6 +3877,7 @@ async function buildSlip(app, ov) {
   }
   function hmBanner() {
     const s = HM.st;
+    if (isAdmin) return ["go", "Admin: all exercises are unlocked for you."];
     if (!s.enabled) return ["bad", "Exercises are closed right now. Please wait for the admin."];
     if (!s.in_window) return ["warn", "Exercise time is from " + hmTime(s.open_time) + " to " + hmTime(s.close_time) + ". Please come back in time."];
     if (s.today_done) return ["ok", "You have finished today's exercise. Come back tomorrow for the next one."];
@@ -3873,6 +3885,7 @@ async function buildSlip(app, ov) {
   }
   const hmReason = (r) => ({ closed: "Exercises are closed right now.", time: "It is not exercise time right now.", done_today: "You have already done today's exercise. Come back tomorrow.", locked: "Pass the previous exercise first.", already_passed: "You have already passed this exercise.", unknown: "This exercise is not available yet." }[r] || "This exercise cannot be started now.");
   function hmExState(ex) {
+    if (isAdmin) return "open";
     if (HM.passed.has(ex.id)) return "passed";
     const prev = HM_EX[ex.topic + "." + (ex.ord - 1)];
     return prev && !HM.passed.has(prev.id) ? "locked" : "open";
